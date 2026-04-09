@@ -1,0 +1,5 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+# This hook can be used to validate commit messages
+# For now, it's a placeholder for future commit message validation
