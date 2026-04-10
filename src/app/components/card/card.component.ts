@@ -1,5 +1,6 @@
-import { Component, ElementRef, AfterContentInit } from '@angular/core';
+import { Component, ElementRef, AfterContentInit, HostBinding } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { fadeIn, slideInUp } from '../../shared/animations';
 
 /**
  * Card Component
@@ -13,17 +14,29 @@ import { CommonModule } from '@angular/common';
   selector: 'app-card',
   standalone: true,
   imports: [CommonModule],
+  animations: [fadeIn, slideInUp],
   template: `
-    <div class="bg-white dark:bg-slate-800 rounded-lg shadow-md dark:shadow-lg overflow-hidden">
-      <div *ngIf="hasHeader" class="border-b border-slate-200 dark:border-slate-700 px-6 py-4">
+    <div 
+      [@slideInUp]
+      class="bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm rounded-2xl shadow-sm border border-slate-200/60 dark:border-slate-700/50 overflow-hidden transition-all duration-300 hover:shadow-xl hover:shadow-indigo-500/5 hover:border-indigo-500/20 group"
+    >
+      <!-- Header -->
+      <div 
+        *ngIf="hasHeader" 
+        class="border-b border-slate-100 dark:border-slate-700/50 px-6 py-5 bg-slate-50/50 dark:bg-slate-900/20 group-hover:bg-indigo-50/30 dark:group-hover:bg-indigo-900/10 transition-colors"
+      >
         <ng-content select="[appCardHeader]"></ng-content>
       </div>
-      <div class="px-6 py-4">
+      
+      <!-- Body -->
+      <div class="p-6">
         <ng-content></ng-content>
       </div>
+      
+      <!-- Footer -->
       <div
         *ngIf="hasFooter"
-        class="border-t border-slate-200 dark:border-slate-700 px-6 py-4 bg-slate-50 dark:bg-slate-900"
+        class="border-t border-slate-100 dark:border-slate-700/50 px-6 py-4 bg-slate-50/30 dark:bg-slate-900/30"
       >
         <ng-content select="[appCardFooter]"></ng-content>
       </div>

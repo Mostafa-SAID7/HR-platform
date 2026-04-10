@@ -8,6 +8,7 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { trigger, transition, style, animate } from '@angular/animations';
+import { fadeIn, slideInUp } from '../../shared/animations';
 import { BadgeComponent } from '../badge/badge.component';
 
 /**
@@ -39,6 +40,7 @@ export interface KPIData {
   imports: [CommonModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [
+    slideInUp,
     trigger('numberChange', [
       transition(':enter', [style({ opacity: 0, transform: 'scale(0.8)' }), animate('300ms ease-out')]),
       transition(':leave', [animate('300ms ease-in', style({ opacity: 0, transform: 'scale(0.8)' }))]),
@@ -46,75 +48,69 @@ export interface KPIData {
   ],
   template: `
     <div
-      class="bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 p-6 shadow-sm hover:shadow-md transition-shadow"
+      [@slideInUp]
+      class="group bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-2xl border border-slate-200/50 dark:border-slate-700/50 p-7 shadow-sm hover:shadow-2xl hover:shadow-indigo-500/10 hover:-translate-y-1.5 transition-all duration-500 relative overflow-hidden"
     >
+      <!-- Decorative Background Shape -->
+      <div class="absolute -top-10 -right-10 w-24 h-24 bg-indigo-500/5 rounded-full blur-3xl group-hover:bg-indigo-500/10 transition-colors"></div>
+
       <!-- Header -->
-      <div class="flex items-start justify-between mb-4">
-        <h3 class="text-sm font-medium text-slate-600 dark:text-slate-400">{{ data.label }}</h3>
-        <div *ngIf="data.loading" class="animate-spin">
-          <svg
-            class="w-4 h-4 text-indigo-600 dark:text-indigo-400"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
-            ></path>
-          </svg>
+      <div class="flex items-start justify-between mb-6 relative z-10">
+        <div class="flex flex-col gap-1">
+          <h3 class="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">{{ data.label }}</h3>
+          <div *ngIf="data.loading" class="flex gap-1 mt-1">
+            <span class="w-1.5 h-1.5 bg-indigo-400 rounded-full animate-bounce"></span>
+            <span class="w-1.5 h-1.5 bg-indigo-400 rounded-full animate-bounce delay-100"></span>
+            <span class="w-1.5 h-1.5 bg-indigo-400 rounded-full animate-bounce delay-200"></span>
+          </div>
+        </div>
+        
+        <div *ngIf="!data.loading" class="p-2 rounded-xl bg-slate-50 dark:bg-slate-900/40 text-slate-500 dark:text-slate-400 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors shadow-inner">
+           <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+           </svg>
         </div>
       </div>
 
-      <!-- Value -->
-      <div class="mb-4">
+      <!-- Value Section -->
+      <div class="mb-6 relative z-10">
         <div *ngIf="!data.loading && !data.error" [@numberChange] class="flex items-baseline gap-2">
-          <p class="text-3xl font-bold text-slate-900 dark:text-white">
+          <p class="text-4xl font-black text-slate-900 dark:text-white tracking-tight">
             {{ formatNumber(data.value) }}
           </p>
-          <span *ngIf="data.unit" class="text-sm text-slate-600 dark:text-slate-400">
+          <span *ngIf="data.unit" class="text-lg font-bold text-slate-400 dark:text-slate-600">
             {{ data.unit }}
           </span>
         </div>
 
-        <div *ngIf="data.error" class="text-sm text-red-600 dark:text-red-400">
+        <div *ngIf="data.error" class="flex items-center gap-2 text-sm font-bold text-red-500 dark:text-red-400 bg-red-50 dark:bg-red-900/20 p-3 rounded-xl border border-red-100 dark:border-red-900/30">
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
           {{ data.error }}
         </div>
       </div>
 
-      <!-- Trend Indicator -->
-      <div *ngIf="!data.loading && !data.error && data.trend" class="flex items-center gap-2">
-        <span
+      <!-- Footer Info -->
+      <div *ngIf="!data.loading && !data.error" class="flex items-center justify-between pt-5 border-t border-slate-50 dark:border-slate-700/50 relative z-10">
+        <!-- Trend Indicator -->
+        <div *ngIf="data.trend" class="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider shadow-sm"
           [ngClass]="{
-            'text-emerald-600 dark:text-emerald-400': data.trend === 'up',
-            'text-red-600 dark:text-red-400': data.trend === 'down',
-            'text-slate-600 dark:text-slate-400': data.trend === 'neutral',
+            'bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 border border-emerald-100 dark:border-emerald-800/30': data.trend === 'up',
+            'bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 border border-red-100 dark:border-red-800/30': data.trend === 'down',
+            'bg-slate-100 dark:bg-slate-700/40 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-600/3s': data.trend === 'neutral'
           }"
         >
-          <span *ngIf="data.trend === 'up'">↑</span>
-          <span *ngIf="data.trend === 'down'">↓</span>
-          <span *ngIf="data.trend === 'neutral'">→</span>
-        </span>
-        <span
-          *ngIf="data.trendPercentage"
-          [ngClass]="{
-            'text-emerald-600 dark:text-emerald-400': data.trend === 'up',
-            'text-red-600 dark:text-red-400': data.trend === 'down',
-            'text-slate-600 dark:text-slate-400': data.trend === 'neutral',
-          }"
-          class="text-sm font-medium"
-        >
-          {{ Math.abs(data.trendPercentage) }}% from last period
-        </span>
-      </div>
+          <span class="flex items-center justify-center transform group-hover:scale-110 transition-transform">
+            <svg *ngIf="data.trend === 'up'" class="w-2.5 h-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M5 15l7-7 7 7" /></svg>
+            <svg *ngIf="data.trend === 'down'" class="w-2.5 h-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M19 9l-7 7-7-7" /></svg>
+            <svg *ngIf="data.trend === 'neutral'" class="w-2.5 h-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M5 12h14" /></svg>
+          </span>
+          <span *ngIf="data.trendPercentage">{{ Math.abs(data.trendPercentage) }}%</span>
+        </div>
 
-      <!-- Previous Value (for comparison) -->
-      <div *ngIf="data.previousValue !== undefined && !data.loading && !data.error" class="mt-3 pt-3 border-t border-slate-200 dark:border-slate-700">
-        <p class="text-xs text-slate-500 dark:text-slate-500">
-          Previous: {{ formatNumber(data.previousValue) }}
-        </p>
+        <!-- Previous Value -->
+        <div *ngIf="data.previousValue !== undefined" class="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-tighter">
+          VS PREV: {{ formatNumber(data.previousValue) }}
+        </div>
       </div>
     </div>
   `,

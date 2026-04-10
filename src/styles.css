@@ -1,3 +1,115 @@
-/* You can add global styles to this file, and also import other style files */
-
 @import 'tailwindcss';
+@config '../tailwind.config.ts';
+
+/* Enable class-based dark mode for Tailwind v4 */
+@variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --spacing-section: 32px;
+  --spacing-card: 24px;
+  --spacing-group: 16px;
+  --max-content-width: 1600px;
+}
+
+:root {
+  --app-bg: #f8fafc;
+  --app-sidebar-width: 18rem;
+}
+
+/* Premium Scrollbar Styles */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #e2e8f0 transparent;
+}
+
+.dark * {
+  scrollbar-color: #334155 transparent;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #e2e8f0;
+  border-radius: 20px;
+  border: 2px solid transparent;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background-color: #334155;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #4f46e5;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background-color: #6366f1;
+}
+
+body {
+  @apply bg-slate-50 text-slate-900 transition-colors duration-300;
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Custom Utilities for "Fully Right" Spacing */
+.page-container {
+  @apply p-6 md:p-10 xl:p-12 space-y-10 max-w-[var(--max-content-width)] mx-auto w-full h-full;
+}
+
+.section-gap {
+  @apply mt-8;
+}
+
+.card-grid {
+  @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6;
+}
+
+/* Premium Form Utilities */
+.form-group-premium {
+  @apply space-y-2;
+}
+
+.form-label-premium {
+  @apply block text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em] mb-2;
+}
+
+.form-input-premium {
+  @apply w-full h-12 px-4 border border-slate-200 dark:border-slate-700/50 rounded-xl bg-slate-50 dark:bg-slate-900/40 text-slate-900 dark:text-white font-bold placeholder:text-slate-400/50 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all duration-300;
+}
+
+.form-select-premium {
+  @apply w-full h-12 px-4 border border-slate-200 dark:border-slate-700/50 rounded-xl bg-slate-50 dark:bg-slate-900/40 text-slate-900 dark:text-white font-bold focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all duration-300 appearance-none cursor-pointer;
+}
+
+.form-icon-wrapper {
+  @apply relative;
+}
+
+.form-icon-inner {
+  @apply absolute top-1/2 -translate-y-1/2 left-4 text-slate-400 dark:text-slate-500 transition-colors pointer-events-none;
+}
+
+.form-icon-wrapper:focus-within .form-icon-inner {
+  @apply text-indigo-500;
+}
+
+.form-input-with-icon {
+  @apply pl-12;
+}
+
+/* RTL Support for Icons */
+[dir="rtl"] .form-icon-inner {
+  @apply left-auto right-4;
+}
+
+[dir="rtl"] .form-input-with-icon {
+  @apply pl-4 pr-12;
+}

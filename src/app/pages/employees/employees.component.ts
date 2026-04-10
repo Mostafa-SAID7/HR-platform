@@ -1,51 +1,15 @@
-import {
-  Component,
-  OnInit,
-  OnDestroy,
-  ChangeDetectionStrategy,
-  signal,
-  computed,
-} from '@angular/core';
+import { Component, OnInit, OnDestroy, signal, inject, computed, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Store } from '@ngrx/store';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import {
-  DataTableComponent,
-  SearchInputComponent,
-  FilterPanelComponent,
-  CardComponent,
-  BadgeComponent,
-  ColumnDefinition,
-  SearchResult,
-  FilterCriteria,
-} from '../../components';
+import { Store } from '@ngrx/store';
+import { DataTableComponent, SearchInputComponent, FilterPanelComponent, CardComponent, type ColumnDefinition, type SearchResult, type FilterCriteria } from '../../components';
+import { DataService } from '../../services/data.service';
+import { Employee } from '../../store/employees/employees.state';
 import { AppState } from '../../store/app.state';
 import { selectAllEmployees } from '../../store/employees/employees.selectors';
-
-/**
- * Employee Analytics Page Component
- *
- * Displays employee records with:
- * - Virtual scrolling for 10,000+ records
- * - Advanced filtering by department, region, status, performance
- * - Full-text search with field-specific search
- * - Real-time data updates
- *
- * Requirements: 6.1, 6.2, 6.3, 6.4, 7.1, 7.2, 7.3, 7.4, 7.5
- */
-
-export interface Employee extends SearchResult {
-  id: string;
-  name: string;
-  email: string;
-  department: string;
-  region: string;
-  role: string;
-  employmentStatus: 'active' | 'on-leave' | 'departed';
-  performanceScore?: number;
-  hireDate: string;
-}
+import { loadEmployees } from '../../store/employees/employees.actions';
+import { fadeIn, slideInUp, routeAnimation } from '../../shared/animations';
 
 @Component({
   selector: 'app-employees',
@@ -58,96 +22,80 @@ export interface Employee extends SearchResult {
     CardComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  animations: [fadeIn, slideInUp],
   template: `
-    <div class="space-y-6">
-      <!-- Header -->
-      <div>
-        <h1 class="text-3xl font-bold text-slate-900 dark:text-white">Employee Analytics</h1>
-        <p class="text-slate-600 dark:text-slate-400 mt-2">
-          View and analyze employee records with advanced filtering and search
-        </p>
-      </div>
-
-      <!-- Search and Filter Controls -->
-      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <!-- Search -->
-        <div class="lg:col-span-2">
-          <app-search-input
-            placeholder="Search employees by name, email, department..."
-            [data]="employees()"
-            [searchableFields]="['name', 'email', 'department', 'role']"
-            (search)="onSearch($event)"
-            (queryChange)="onSearchQueryChange($event)"
-          ></app-search-input>
+    <div class="page-container" [@fadeIn]>
+      <!-- Balanced Page Header -->
+      <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-8 mb-4" [@slideInUp]>
+        <div class="space-y-2">
+          <h1 class="text-4xl font-black text-slate-900 dark:text-white tracking-tighter">
+            Employee Intelligence
+          </h1>
+          <p class="text-slate-500 dark:text-slate-400 text-lg font-medium leading-relaxed max-w-2xl">
+            Real-time workforce monitoring and performance distribution across global regions.
+          </p>
         </div>
-
-        <!-- Quick Stats -->
-        <app-card>
-          <div class="text-center">
-            <p class="text-sm font-medium text-slate-600 dark:text-slate-400">Total Employees</p>
-            <p class="text-2xl font-bold text-indigo-600 dark:text-indigo-400 mt-2">
-              {{ filteredEmployees().length }}
-            </p>
+        
+        <!-- Summary Stats Ribbon -->
+        <div class="flex flex-wrap items-center gap-4">
+          <div class="bg-indigo-50 dark:bg-indigo-900/40 border border-indigo-100 dark:border-indigo-800/30 px-6 py-3 rounded-2xl shadow-sm">
+            <p class="text-[10px] font-black uppercase tracking-widest text-indigo-400 mb-1">Total Force</p>
+            <div class="flex items-baseline gap-1">
+              <span class="text-2xl font-black text-indigo-700 dark:text-indigo-300">{{ employees().length }}</span>
+              <span class="text-xs font-bold text-indigo-400">Headcount</span>
+            </div>
           </div>
-        </app-card>
+          
+          <div class="bg-emerald-50 dark:bg-emerald-900/40 border border-emerald-100 dark:border-emerald-800/30 px-6 py-3 rounded-2xl shadow-sm">
+            <p class="text-[10px] font-black uppercase tracking-widest text-emerald-400 mb-1">Active Now</p>
+            <div class="flex items-baseline gap-1">
+              <span class="text-2xl font-black text-emerald-700 dark:text-emerald-300">{{ activeEmployeesCount() }}</span>
+              <span class="text-xs font-bold text-emerald-400">Synced</span>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <!-- Filters and Table -->
-      <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
-        <!-- Filter Panel -->
-        <div class="lg:col-span-1">
+      <!-- Sophisticated Filtering Interface -->
+      <div class="grid grid-cols-1 lg:grid-cols-4 gap-8 mt-10">
+        <!-- Sidebar Filter Panel -->
+        <div class="lg:col-span-1" [@slideInUp]>
           <app-filter-panel
             (filterChange)="onFilterChange($event)"
           ></app-filter-panel>
         </div>
 
-        <!-- Data Table -->
-        <div class="lg:col-span-3">
-          <app-data-table
-            title="Employee Records"
-            [data]="filteredEmployees()"
-            [columns]="tableColumns"
-          ></app-data-table>
+        <!-- Main Workspace -->
+        <div class="lg:col-span-3 space-y-8">
+          <!-- Search & Export Controls -->
+          <app-card>
+            <div class="flex flex-col md:flex-row items-center gap-6">
+              <div class="flex-1 w-full">
+                <app-search-input
+                  placeholder="Universal search: Name, Role, Department..."
+                  [data]="employees()"
+                  [searchableFields]="['name', 'email', 'department', 'role']"
+                  (search)="onSearch($event)"
+                  (queryChange)="onSearchQueryChange($event)"
+                ></app-search-input>
+              </div>
+              <button class="bg-slate-900 dark:bg-indigo-600 text-white px-6 py-3.5 rounded-2xl font-bold text-sm shadow-xl shadow-indigo-600/20 hover:scale-105 active:scale-95 transition-all flex items-center gap-2">
+                 <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
+                 Export Report
+              </button>
+            </div>
+          </app-card>
+
+          <!-- Core Data Grid -->
+          <div class="h-[700px] animate-in fade-in slide-in-from-bottom-4 duration-1000">
+            <app-data-table
+              [title]="'Synchronized Workforce View'"
+              [loading]="isLoading()"
+              [data]="filteredEmployees()"
+              [columns]="tableColumns"
+            ></app-data-table>
+          </div>
         </div>
-      </div>
-
-      <!-- Summary Stats -->
-      <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <app-card>
-          <div class="text-center">
-            <p class="text-sm font-medium text-slate-600 dark:text-slate-400">Active</p>
-            <p class="text-2xl font-bold text-emerald-600 dark:text-emerald-400 mt-2">
-              {{ activeEmployeesCount() }}
-            </p>
-          </div>
-        </app-card>
-
-        <app-card>
-          <div class="text-center">
-            <p class="text-sm font-medium text-slate-600 dark:text-slate-400">On Leave</p>
-            <p class="text-2xl font-bold text-yellow-600 dark:text-yellow-400 mt-2">
-              {{ onLeaveCount() }}
-            </p>
-          </div>
-        </app-card>
-
-        <app-card>
-          <div class="text-center">
-            <p class="text-sm font-medium text-slate-600 dark:text-slate-400">Avg Performance</p>
-            <p class="text-2xl font-bold text-indigo-600 dark:text-indigo-400 mt-2">
-              {{ averagePerformance() }}
-            </p>
-          </div>
-        </app-card>
-
-        <app-card>
-          <div class="text-center">
-            <p class="text-sm font-medium text-slate-600 dark:text-slate-400">Departments</p>
-            <p class="text-2xl font-bold text-blue-600 dark:text-blue-400 mt-2">
-              {{ uniqueDepartments() }}
-            </p>
-          </div>
-        </app-card>
       </div>
     </div>
   `,
@@ -156,21 +104,24 @@ export class EmployeesComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
 
   // Signals
+  isLoading = signal<boolean>(true);
   employees = signal<Employee[]>([]);
   searchResults = signal<Employee[]>([]);
   filteredEmployees = computed(() => {
-    const results = this.searchResults().length > 0 ? this.searchResults() : this.employees();
-    return this.applyFilters(results);
+    // If we have a non-empty search query but no search results, we should show empty list
+    // If we have no search query, we use all employees
+    const query = this.searchQuery();
+    let dataToFilter = this.employees();
+    
+    if (query) {
+      dataToFilter = this.searchResults();
+    }
+    
+    return this.applyFilters(dataToFilter);
   });
 
   // Filter state
-  currentFilters = signal<FilterCriteria>({
-    department: [],
-    region: [],
-    status: [],
-    performanceScoreRange: [0, 100],
-    hireDateRange: [],
-  });
+  currentFilters = signal<FilterCriteria>({});
 
   // Table columns
   tableColumns: ColumnDefinition[] = [
@@ -213,19 +164,26 @@ export class EmployeesComponent implements OnInit, OnDestroy {
   });
 
   uniqueDepartments = computed(() => {
-    const departments = new Set(this.filteredEmployees().map((e) => e.department));
+    const departments = new Set(this.employees().map((e) => e.department));
     return departments.size;
   });
+
+  searchQuery = signal<string>('');
 
   constructor(private store: Store<AppState>) {}
 
   ngOnInit(): void {
+    // Dispatch load action
+    this.store.dispatch(loadEmployees());
+
     // Load employees from store
     this.store
       .select(selectAllEmployees)
       .pipe(takeUntil(this.destroy$))
-      .subscribe((employees) => {
+      .subscribe((employees: Employee[]) => {
         this.employees.set(employees);
+        // Simulate a slight loading delay for premium feel
+        setTimeout(() => this.isLoading.set(false), 800);
       });
   }
 
@@ -239,7 +197,7 @@ export class EmployeesComponent implements OnInit, OnDestroy {
   }
 
   onSearchQueryChange(query: string): void {
-    // Handle search query changes if needed
+    this.searchQuery.set(query);
   }
 
   onFilterChange(filters: FilterCriteria): void {
@@ -248,6 +206,7 @@ export class EmployeesComponent implements OnInit, OnDestroy {
 
   private applyFilters(data: Employee[]): Employee[] {
     const filters = this.currentFilters();
+    if (!filters || Object.keys(filters).length === 0) return data;
 
     return data.filter((employee) => {
       // Department filter
@@ -264,16 +223,18 @@ export class EmployeesComponent implements OnInit, OnDestroy {
         }
       }
 
-      // Status filter
-      if (filters.status && filters.status.length > 0) {
-        if (!filters.status.includes(employee.employmentStatus)) {
-          return false;
-        }
+      // Status filter (Case-insensitive normalization)
+      const statusFilters = filters.employmentStatus || filters.status;
+      if (statusFilters && statusFilters.length > 0) {
+        const normalizedEmployeeStatus = employee.employmentStatus.toLowerCase();
+        const hasMatch = statusFilters.some(s => s.toLowerCase().replace(' ', '-') === normalizedEmployeeStatus);
+        if (!hasMatch) return false;
       }
 
       // Performance score range filter
-      if (filters.performanceScoreRange && employee.performanceScore !== undefined) {
-        const [min, max] = filters.performanceScoreRange;
+      if (employee.performanceScore !== undefined) {
+        const min = filters.performanceScoreMin ?? 0;
+        const max = filters.performanceScoreMax ?? 100;
         if (employee.performanceScore < min || employee.performanceScore > max) {
           return false;
         }

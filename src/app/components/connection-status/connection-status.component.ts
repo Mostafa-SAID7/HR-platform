@@ -40,6 +40,8 @@ export class ConnectionStatusComponent implements OnInit {
     switch (status) {
       case 'connected':
         return 'Connected';
+      case 'mocked':
+        return 'Mock Mode';
       case 'disconnected':
         return 'Disconnected';
       case 'reconnecting':
@@ -53,7 +55,9 @@ export class ConnectionStatusComponent implements OnInit {
     const status = this.wsService.getConnectionStatus();
     switch (status) {
       case 'connected':
-        return 'bg-emerald-100 text-emerald-800 dark:bg-emerald-500/20 dark:text-emerald-300';
+        return 'bg-emerald-100 text-emerald-800 dark:bg-emerald-500/20 dark:text-emerald-300 shadow-sm';
+      case 'mocked':
+        return 'bg-indigo-100 text-indigo-800 dark:bg-indigo-500/20 dark:text-indigo-300 shadow-sm border border-indigo-200 dark:border-indigo-800/50';
       case 'disconnected':
         return 'bg-red-100 text-red-800 dark:bg-red-500/20 dark:text-red-400';
       case 'reconnecting':
@@ -68,6 +72,8 @@ export class ConnectionStatusComponent implements OnInit {
     switch (status) {
       case 'connected':
         return 'bg-emerald-600 dark:bg-emerald-400';
+      case 'mocked':
+        return 'bg-indigo-600 dark:bg-indigo-400 animate-pulse';
       case 'disconnected':
         return 'bg-red-600 dark:bg-red-400';
       case 'reconnecting':

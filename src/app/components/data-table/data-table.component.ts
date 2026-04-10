@@ -13,23 +13,9 @@ import {
 import { CommonModule } from '@angular/common';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { FormsModule } from '@angular/forms';
-import { ButtonComponent } from '../button/button.component';
 import { IconComponent } from '../icon/icon.component';
 import { I18nService } from '../../services/i18n.service';
-
-/**
- * Data Table Component with Virtual Scrolling
- *
- * A high-performance data table component supporting:
- * - Virtual scrolling for 10,000+ records
- * - Dynamic column definitions
- * - Sorting functionality
- * - Pagination controls
- * - Expandable row details
- * - Full RTL support with logical CSS properties
- *
- * Requirements: 3.3, 6.1, 7.2
- */
+import { fadeIn, slideInUp } from '../../shared/animations';
 
 export interface ColumnDefinition {
   key: string;
@@ -49,8 +35,10 @@ export interface SortState {
   standalone: true,
   imports: [CommonModule, ScrollingModule, FormsModule, IconComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  animations: [fadeIn, slideInUp],
   template: `
     <div
+      [@slideInUp]
       class="flex flex-col h-full bg-white dark:bg-slate-800 rounded-lg shadow-md dark:shadow-lg border border-slate-200 dark:border-slate-700 overflow-hidden"
     >
       <!-- Table Header with Controls -->
@@ -62,14 +50,14 @@ export interface SortState {
             {{ title }}
           </h3>
           <span class="text-sm font-medium text-slate-500 dark:text-slate-400 px-2 py-1 bg-slate-100 dark:bg-slate-700 rounded-md">
-            {{ filteredData().length }} {{ i18n.translate('common.records') }}
+            {{ loading ? '...' : filteredData().length }} {{ i18n.translate('common.records') }}
           </span>
         </div>
         <div class="flex items-center gap-2">
           <select
             [(ngModel)]="pageSizeInternal"
             (change)="onPageSizeChange()"
-            class="px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md bg-white dark:bg-slate-700 text-slate-900 dark:text-white text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
+            class="px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md bg-white dark:bg-slate-700 text-slate-900 dark:text-white text-sm focus:ring-2 focus:ring-indigo-500 outline-none transition-all"
             aria-label="Items per page"
           >
             <option [value]="10">10 {{ i18n.translate('common.records') }}</option>
@@ -81,7 +69,19 @@ export interface SortState {
       </div>
 
       <!-- Table Body -->
-      <div class="flex-1 flex flex-col min-h-0">
+      <div class="flex-1 flex flex-col min-h-0 relative">
+        <!-- Loading Overlay -->
+        <div 
+          *ngIf="loading" 
+          [@fadeIn]
+          class="absolute inset-0 z-20 bg-white/50 dark:bg-slate-800/50 backdrop-blur-[1px] flex items-center justify-center"
+        >
+          <div class="flex flex-col items-center gap-3">
+            <div class="w-10 h-10 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin"></div>
+            <p class="text-sm font-bold text-indigo-600 dark:text-indigo-400">Loading data...</p>
+          </div>
+        </div>
+
         <!-- Column Headers -->
         <div
           class="flex bg-slate-100 dark:bg-slate-800/80 border-b border-slate-200 dark:border-slate-700 sticky top-0 z-10"
@@ -92,7 +92,7 @@ export interface SortState {
               [checked]="allSelected()"
               (change)="toggleSelectAll()"
               [attr.aria-label]="i18n.translate('common.select_all')"
-              class="w-4 h-4 rounded text-indigo-600 focus:ring-indigo-500 bg-white dark:bg-slate-700 border-slate-300 dark:border-slate-600"
+              class="w-4 h-4 rounded text-indigo-600 focus:ring-indigo-500 bg-white dark:bg-slate-700 border-slate-300 dark:border-slate-600 transition-all"
             />
           </div>
           <div
@@ -103,7 +103,7 @@ export interface SortState {
             <button
               *ngIf="column.sortable"
               (click)="onSort(column.key)"
-              class="flex items-center gap-2 hover:text-slate-900 dark:hover:text-white transition-colors group"
+              class="flex items-center gap-2 hover:text-slate-900 dark:hover:text-white transition-all group"
               [attr.aria-label]="i18n.translate('common.sort_by') + ' ' + column.label"
             >
               {{ column.label }}
@@ -113,9 +113,7 @@ export interface SortState {
                 [class.opacity-0]="sortState().column !== column.key"
                 [class.group-hover:opacity-50]="sortState().column !== column.key"
               >
-                <span *ngIf="sortState().column === column.key">
-                  {{ sortState().direction === 'desc' ? '↓' : '↑' }}
-                </span>
+                <app-icon *ngIf="sortState().column === column.key" [name]="sortState().direction === 'desc' ? 'chevron-down' : 'chevron-up'" size="xs"></app-icon>
               </span>
             </button>
             <span *ngIf="!column.sortable">{{ column.label }}</span>
@@ -128,8 +126,18 @@ export interface SortState {
           [itemSize]="56"
           class="flex-1 h-full scrollbar-thin scrollbar-thumb-slate-300 dark:scrollbar-thumb-slate-600"
         >
+          <!-- Skeleton Rows -->
+          <ng-container *ngIf="loading && paginatedData().length === 0">
+            <div *ngFor="let i of [1,2,3,4,5,6]" class="flex items-center border-b border-slate-200 dark:border-slate-700 h-[56px] px-4 animate-pulse">
+               <div class="w-12 flex justify-center"><div class="w-4 h-4 bg-slate-200 dark:bg-slate-700 rounded"></div></div>
+               <div *ngFor="let col of columns" class="flex-1 px-4"><div class="h-4 bg-slate-200 dark:bg-slate-700 rounded w-3/4"></div></div>
+               <div class="w-12"></div>
+            </div>
+          </ng-container>
+
           <ng-container *cdkVirtualFor="let row of paginatedData(); trackBy: trackById">
             <div
+              [@fadeIn]
               class="flex items-center border-b border-slate-200 dark:border-slate-700 hover:bg-indigo-50/50 dark:hover:bg-indigo-900/10 transition-colors bg-white dark:bg-slate-800"
               [class.bg-indigo-50/30]="isRowSelected(row.id)"
               [class.dark:bg-indigo-900/5]="isRowSelected(row.id)"
@@ -140,7 +148,7 @@ export interface SortState {
                   [checked]="isRowSelected(row.id)"
                   (change)="toggleRowSelection(row.id)"
                   [attr.aria-label]="'Select row ' + row.id"
-                  class="w-4 h-4 rounded text-indigo-600 focus:ring-indigo-500 bg-white dark:bg-slate-700 border-slate-300 dark:border-slate-600"
+                  class="w-4 h-4 rounded text-indigo-600 focus:ring-indigo-500 bg-white dark:bg-slate-700 border-slate-300 dark:border-slate-600 transition-all"
                 />
               </div>
               <div
@@ -158,7 +166,7 @@ export interface SortState {
               <div class="w-12 px-4 py-4 flex items-center justify-center">
                 <button
                   (click)="toggleRowExpanded(row.id)"
-                  class="p-1 rounded-full hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
+                  class="p-1 rounded-full hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-all transform"
                   [attr.aria-label]="i18n.translate('common.expand')"
                   [class.rotate-180]="isRowExpanded(row.id)"
                 >
@@ -167,9 +175,10 @@ export interface SortState {
               </div>
             </div>
 
-            <!-- Expanded Details (Simplified integration for Virtual Scroll) -->
+            <!-- Expanded Details -->
             <div
               *ngIf="isRowExpanded(row.id)"
+              [@fadeIn]
               class="bg-slate-50 dark:bg-slate-900/50 px-12 py-6 border-b border-slate-200 dark:border-slate-700 animate-in fade-in slide-in-from-top-2 duration-200"
             >
               <ng-container *ngIf="expandedRowTemplate">
@@ -192,7 +201,7 @@ export interface SortState {
             </div>
           </ng-container>
         <!-- Empty State -->
-        <div *ngIf="paginatedData().length === 0" class="flex flex-col items-center justify-center p-12 text-slate-500 dark:text-slate-400 h-full">
+        <div *ngIf="!loading && paginatedData().length === 0" class="flex flex-col items-center justify-center p-12 text-slate-500 dark:text-slate-400 h-full" [@fadeIn]>
           <app-icon name="document-magnifying-glass" class="w-12 h-12 text-slate-400 dark:text-slate-500 mb-4"></app-icon>
           <p class="text-lg font-medium text-slate-900 dark:text-slate-200">{{ i18n.translate('common.no_records') }}</p>
           <p class="text-sm mt-1">Try adjusting your filters or search query.</p>
@@ -248,6 +257,7 @@ export interface SortState {
 })
 export class DataTableComponent implements OnInit, OnDestroy {
   @Input() title = 'Data Table';
+  @Input() loading = false;
   @Input() columns: ColumnDefinition[] = [];
   @Input() data: any[] = [];
   @Input() expandedRowTemplate: any;

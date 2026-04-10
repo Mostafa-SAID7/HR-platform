@@ -60,10 +60,10 @@ export const routes: Routes = [
         data: { roles: ['hr_director', 'admin'] },
       },
       {
-        path: 'hiring-forecast',
+        path: 'hiring',
         loadComponent: () =>
-          import('./pages/hiring-forecast/hiring-forecast.component').then(
-            (m) => m.HiringForecastComponent,
+          import('./pages/hiring/hiring.component').then(
+            (m) => m.HiringComponent,
           ),
         canActivate: [authGuard, authorizationGuard],
         data: { roles: ['talent_acquisition', 'admin'] },
@@ -84,6 +84,7 @@ export const routes: Routes = [
   },
   {
     path: '**',
-    redirectTo: '',
+    loadComponent: () =>
+      import('./pages/not-found/not-found.component').then((m) => m.NotFoundComponent),
   },
 ];

@@ -62,7 +62,7 @@ export class InputComponent implements ControlValueAccessor {
   @Input() ariaLabel: string | null = null;
   @Output() valueChange = new EventEmitter<string>();
 
-  value = '';
+  @Input() value = '';
   touched = false;
   errorId = `${this.id}-error`;
 

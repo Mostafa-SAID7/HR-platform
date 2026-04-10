@@ -1,15 +1,9 @@
 import { Injectable } from '@angular/core';
-import { Subject, Observable, BehaviorSubject, interval } from 'rxjs';
+import { Subject, Observable, BehaviorSubject, interval, timer, Subscription } from 'rxjs';
 import { filter, map, retryWhen, delay, take } from 'rxjs/operators';
 
 /**
  * WebSocket Service
- *
- * Manages WebSocket connections for real-time data updates.
- * Implements automatic reconnection with exponential backoff.
- * Handles connection state management and data streaming.
- *
- * Requirements: 5.1, 5.2, 13.1, 13.2
  */
 @Injectable({
   providedIn: 'root',
@@ -17,35 +11,36 @@ import { filter, map, retryWhen, delay, take } from 'rxjs/operators';
 export class WebSocketService {
   private ws: WebSocket | null = null;
   private messageSubject = new Subject<any>();
-  private connectionStatus = new BehaviorSubject<'connected' | 'disconnected' | 'reconnecting'>(
+  private connectionStatus = new BehaviorSubject<'connected' | 'disconnected' | 'reconnecting' | 'mocked'>(
     'disconnected',
   );
   private reconnectAttempts = 0;
-  private maxReconnectAttempts = 5;
-  private reconnectDelay = 1000; // Start with 1 second
+  private maxReconnectAttempts = 3;
+  private reconnectDelay = 2000;
+  private mockSubscription?: Subscription;
 
   messages$: Observable<any> = this.messageSubject.asObservable();
-  connectionStatus$: Observable<'connected' | 'disconnected' | 'reconnecting'> =
+  connectionStatus$: Observable<'connected' | 'disconnected' | 'reconnecting' | 'mocked'> =
     this.connectionStatus.asObservable();
 
   constructor() {
-    // Auto-connect on service initialization
     this.connect();
   }
 
   connect(url: string = 'ws://localhost:8080'): void {
-    if (this.ws && this.ws.readyState === WebSocket.OPEN) {
-      return; // Already connected
+    if (this.ws && (this.ws.readyState === WebSocket.OPEN || this.ws.readyState === WebSocket.CONNECTING)) {
+      return;
     }
+
+    this.stopMocking();
 
     try {
       this.ws = new WebSocket(url);
 
       this.ws.onopen = () => {
-        console.log('[WebSocketService] Connected to WebSocket server');
+        console.log('[WebSocketService] Connected to real WebSocket server');
         this.connectionStatus.next('connected');
         this.reconnectAttempts = 0;
-        this.reconnectDelay = 1000;
       };
 
       this.ws.onmessage = (event: MessageEvent) => {
@@ -57,18 +52,15 @@ export class WebSocketService {
         }
       };
 
-      this.ws.onerror = (error: Event) => {
-        console.error('[WebSocketService] WebSocket error:', error);
+      this.ws.onerror = () => {
         this.connectionStatus.next('disconnected');
       };
 
       this.ws.onclose = () => {
-        console.log('[WebSocketService] Disconnected from WebSocket server');
         this.connectionStatus.next('disconnected');
         this.attemptReconnect(url);
       };
     } catch (error) {
-      console.error('[WebSocketService] Failed to create WebSocket:', error);
       this.connectionStatus.next('disconnected');
       this.attemptReconnect(url);
     }
@@ -76,26 +68,59 @@ export class WebSocketService {
 
   private attemptReconnect(url: string): void {
     if (this.reconnectAttempts >= this.maxReconnectAttempts) {
-      console.error('[WebSocketService] Max reconnection attempts reached');
+      console.warn('[WebSocketService] Max reconnection attempts reached. Switching to Mock Mode for UI demonstration.');
+      this.startMocking();
       return;
     }
 
     this.reconnectAttempts++;
     this.connectionStatus.next('reconnecting');
 
-    const delay = Math.pow(2, this.reconnectAttempts - 1) * this.reconnectDelay;
-    console.log(
-      `[WebSocketService] Attempting to reconnect in ${delay}ms (attempt ${this.reconnectAttempts}/${this.maxReconnectAttempts})`,
-    );
-
     setTimeout(() => {
       this.connect(url);
-    }, delay);
+    }, this.reconnectDelay);
+  }
+
+  private startMocking(): void {
+    if (this.connectionStatus.value === 'mocked') return;
+    
+    this.connectionStatus.next('mocked');
+    
+    // Simulate real-time updates every 5 seconds
+    this.mockSubscription = timer(0, 5000).subscribe(() => {
+      const types = ['kpi_update', 'notification', 'chart_update'];
+      const randomType = types[Math.floor(Math.random() * types.length)];
+      
+      let mockData: any = { type: randomType, timestamp: new Date().toISOString() };
+      
+      if (randomType === 'kpi_update') {
+        mockData.data = {
+          headcount: 12000 + Math.floor(Math.random() * 50),
+          turnover: (4.2 + (Math.random() * 0.4 - 0.2)).toFixed(2),
+          satisfaction: (88 + (Math.random() * 2 - 1)).toFixed(1)
+        };
+      } else if (randomType === 'notification') {
+        mockData.data = {
+          id: Math.random().toString(36).substr(2, 9),
+          title: 'Live Insight',
+          message: 'Real-time satisfaction score updated in Engineering department.',
+          priority: 'low'
+        };
+      }
+      
+      this.messageSubject.next(mockData);
+    });
+  }
+
+  private stopMocking(): void {
+    this.mockSubscription?.unsubscribe();
   }
 
   send(data: any): void {
     if (this.ws && this.ws.readyState === WebSocket.OPEN) {
       this.ws.send(JSON.stringify(data));
+    } else if (this.connectionStatus.value === 'mocked') {
+      console.log('[WebSocketService] Mock Send (Silent):', data);
     } else {
       console.warn('[WebSocketService] WebSocket is not connected');
     }
@@ -109,18 +134,20 @@ export class WebSocketService {
   }
 
   disconnect(): void {
+    this.stopMocking();
     if (this.ws) {
       this.ws.close();
       this.ws = null;
     }
     this.connectionStatus.next('disconnected');
+    this.reconnectAttempts = 0;
   }
 
   isConnected(): boolean {
-    return this.connectionStatus.value === 'connected';
+    return this.connectionStatus.value === 'connected' || this.connectionStatus.value === 'mocked';
   }
 
-  getConnectionStatus(): 'connected' | 'disconnected' | 'reconnecting' {
+  getConnectionStatus(): 'connected' | 'disconnected' | 'reconnecting' | 'mocked' {
     return this.connectionStatus.value;
   }
 }

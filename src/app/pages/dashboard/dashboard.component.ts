@@ -29,9 +29,9 @@ import { WebSocketService } from '../../services/websocket.service';
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="space-y-6">
+    <div class="page-container">
       <!-- KPI Cards Grid -->
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div class="card-grid">
         <!-- Total Headcount KPI -->
         <app-kpi-card
           [data]="{
@@ -81,36 +81,52 @@ import { WebSocketService } from '../../services/websocket.service';
         ></app-kpi-card>
       </div>
 
-      <!-- Welcome Message -->
-      <app-card>
-        <div class="text-center py-8">
-          <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-2">
-            Welcome to HR Analytics Platform
-          </h2>
-          <p class="text-slate-600 dark:text-slate-400">
-            This is your central hub for workforce analytics, performance tracking, and strategic HR
-            insights. All metrics update in real-time as data changes.
-          </p>
-        </div>
-      </app-card>
+      <!-- Main Dashboard Grid -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-8">
+        <!-- Welcome Message -->
+        <app-card>
+          <div appCardHeader class="flex items-center gap-2">
+             <div class="w-2 h-2 bg-indigo-500 rounded-full animate-pulse"></div>
+             <span class="text-sm font-bold uppercase tracking-wider text-slate-500">Welcome</span>
+          </div>
+          <div class="py-10 text-center">
+            <h2 class="text-3xl font-black text-slate-900 dark:text-white mb-4 tracking-tight">
+              Workforce Intelligence Hub
+            </h2>
+            <p class="text-slate-600 dark:text-slate-400 max-w-md mx-auto leading-relaxed">
+              Your real-time command center for talent metrics, engagement data, and organizational growth insights.
+            </p>
+          </div>
+        </app-card>
 
-      <!-- Quick Stats -->
-      <app-card>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div class="text-center">
-            <p class="text-sm font-medium text-slate-600 dark:text-slate-400 mb-2">Departures (This Month)</p>
-            <p class="text-2xl font-bold text-red-600 dark:text-red-400">{{ metrics()?.departures || 0 }}</p>
+        <!-- Quick Stats -->
+        <app-card>
+          <div appCardHeader class="flex items-center gap-2">
+             <div class="w-2 h-2 bg-emerald-500 rounded-full"></div>
+             <span class="text-sm font-bold uppercase tracking-wider text-slate-500">System Pulse</span>
           </div>
-          <div class="text-center">
-            <p class="text-sm font-medium text-slate-600 dark:text-slate-400 mb-2">Last Updated</p>
-            <p class="text-sm text-slate-700 dark:text-slate-300">{{ formatLastUpdated(metrics()?.lastUpdated) }}</p>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-8 py-4">
+            <div class="flex flex-col items-center">
+              <p class="text-xs font-black text-slate-400 dark:text-slate-500 uppercase tracking-tighter mb-1">Departures</p>
+              <p class="text-4xl font-black text-red-500">{{ metrics()?.departures || 0 }}</p>
+              <span class="text-[10px] text-slate-400">Current Month</span>
+            </div>
+            <div class="flex flex-col items-center">
+              <p class="text-xs font-black text-slate-400 dark:text-slate-500 uppercase tracking-tighter mb-1">Last Sync</p>
+              <p class="text-base font-bold text-slate-700 dark:text-slate-300 mt-2">{{ formatLastUpdated(metrics()?.lastUpdated) }}</p>
+              <div class="flex items-center gap-1 mt-1">
+                <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-ping"></span>
+                <span class="text-[10px] text-emerald-600">Live</span>
+              </div>
+            </div>
+            <div class="flex flex-col items-center justify-center">
+               <div class="bg-emerald-50 dark:bg-emerald-900/20 px-4 py-2 rounded-full border border-emerald-100 dark:border-emerald-800/30">
+                  <span class="text-xs font-black text-emerald-600 dark:text-emerald-400 uppercase tracking-widest">Active</span>
+               </div>
+            </div>
           </div>
-          <div class="text-center">
-            <p class="text-sm font-medium text-slate-600 dark:text-slate-400 mb-2">Data Freshness</p>
-            <app-badge variant="success">Real-time</app-badge>
-          </div>
-        </div>
-      </app-card>
+        </app-card>
+      </div>
     </div>
   `,
 })

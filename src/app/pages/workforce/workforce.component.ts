@@ -1,10 +1,11 @@
 import { Component, OnInit, ChangeDetectionStrategy, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { CardComponent } from '../../components/card/card.component';
+import { KPICardComponent, CardComponent } from '../../components';
 import { ChartComponent, type ChartConfig } from '../../components/chart/chart.component';
 import { BadgeComponent } from '../../components/badge/badge.component';
 import { DataService } from '../../services/data.service';
 import { forkJoin } from 'rxjs';
+import { fadeIn, slideInUp } from '../../shared/animations';
 
 /**
  * Workforce Metrics Dashboard
@@ -19,206 +20,228 @@ import { forkJoin } from 'rxjs';
 @Component({
   selector: 'app-workforce',
   standalone: true,
-  imports: [CommonModule, CardComponent, ChartComponent, BadgeComponent],
+  imports: [CommonModule, CardComponent, KPICardComponent, ChartComponent, BadgeComponent],
+  animations: [fadeIn, slideInUp],
   template: `
-    <div class="space-y-6">
-      <!-- Header -->
-      <div class="flex items-center justify-between">
-        <div>
-          <h1 class="text-3xl font-bold text-slate-900 dark:text-white">Workforce Metrics</h1>
-          <p class="text-slate-600 dark:text-slate-400 mt-2">
-            Monitor key workforce indicators and trends across regions and departments
+    <div class="page-container" [@fadeIn]>
+      <!-- Balanced Page Header -->
+      <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-8 mb-4" [@slideInUp]>
+        <div class="space-y-2">
+          <h1 class="text-4xl font-black text-slate-900 dark:text-white tracking-tighter">
+            Workforce Intelligence
+          </h1>
+          <p class="text-slate-500 dark:text-slate-400 text-lg font-medium leading-relaxed max-w-2xl">
+            Real-time workforce monitoring, regional distribution, and employment status analytics.
           </p>
         </div>
-        <div *ngIf="isLoading()" class="flex items-center text-indigo-500">
-          <svg class="animate-spin h-5 w-5 mr-3" viewBox="0 0 24 24">
-            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none"></circle>
-            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-          </svg>
-          <span class="text-sm font-medium">Refreshing Data...</span>
+        
+        <div *ngIf="isLoading()" class="flex items-center gap-3 bg-indigo-50 dark:bg-indigo-900/40 px-6 py-3 rounded-2xl border border-indigo-100 dark:border-indigo-800/30">
+          <div class="w-2 h-2 bg-indigo-600 rounded-full animate-ping"></div>
+          <span class="text-sm font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-widest">Syncing Data...</span>
         </div>
       </div>
 
-      <!-- KPI Cards -->
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
-        <!-- Total Headcount -->
+      <!-- KPI Cards Grid -->
+      <div class="card-grid" [@slideInUp]>
+        <app-kpi-card
+          [data]="{
+            label: 'Total Headcount',
+            value: totalHeadcount(),
+            previousValue: 11700,
+            trend: 'up',
+            trendPercentage: 2.5,
+            loading: isLoading()
+          }"
+        ></app-kpi-card>
+
+        <app-kpi-card
+          [data]="{
+            label: 'Active Employees',
+            value: activeEmployees(),
+            previousValue: 11500,
+            trend: 'up',
+            trendPercentage: 1.2,
+            loading: isLoading()
+          }"
+        ></app-kpi-card>
+
+        <app-kpi-card
+          [data]="{
+            label: 'On Leave',
+            value: onLeave(),
+            previousValue: 148,
+            trend: 'up',
+            trendPercentage: 0.8,
+            loading: isLoading()
+          }"
+        ></app-kpi-card>
+
+        <app-kpi-card
+          [data]="{
+            label: 'New Hires',
+            value: newHires(),
+            previousValue: 40,
+            trend: 'up',
+            trendPercentage: 12,
+            loading: isLoading()
+          }"
+        ></app-kpi-card>
+
+        <app-kpi-card
+          [data]="{
+            label: 'Departures',
+            value: departures(),
+            previousValue: 30,
+            trend: 'up',
+            trendPercentage: 5,
+            loading: isLoading()
+          }"
+        ></app-kpi-card>
+      </div>
+
+      <!-- Metrics by Region & Department -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-8" [@slideInUp]>
+        <!-- Headcount by Region -->
         <app-card>
-          <div class="text-center">
-            <p class="text-sm font-medium text-slate-600 dark:text-slate-400">Total Headcount</p>
-            <p class="text-3xl font-bold text-indigo-600 dark:text-indigo-400 mt-2">
-              {{ totalHeadcount() | number }}
-            </p>
-            <app-badge variant="success" class="mt-3 justify-center">
-              ↑ 2.5% from last month
-            </app-badge>
+          <div appCardHeader class="flex items-center justify-between">
+            <div class="flex items-center gap-3">
+               <div class="w-1.5 h-6 bg-indigo-600 rounded-full"></div>
+               <h2 class="text-xl font-black text-slate-900 dark:text-white tracking-tight">Regional Distribution</h2>
+            </div>
+            <app-badge variant="info">Geo Split</app-badge>
+          </div>
+          <div class="py-4">
+            @defer (on viewport) {
+              <app-chart
+                [chartConfig]="headcountByRegionChart()"
+                (chartClick)="onChartClick($event)"
+              ></app-chart>
+            } @placeholder {
+              <div class="h-[400px] flex items-center justify-center bg-slate-50/50 dark:bg-slate-900/20 rounded-2xl border border-dashed border-slate-200 dark:border-slate-700">
+                <span class="text-xs font-bold text-slate-400 uppercase tracking-widest animate-pulse">Mapping Regions...</span>
+              </div>
+            }
           </div>
         </app-card>
 
-        <!-- Active Employees -->
+        <!-- Headcount by Department -->
         <app-card>
-          <div class="text-center">
-            <p class="text-sm font-medium text-slate-600 dark:text-slate-400">Active Employees</p>
-            <p class="text-3xl font-bold text-emerald-600 dark:text-emerald-400 mt-2">
-              {{ activeEmployees() | number }}
-            </p>
-            <app-badge variant="success" class="mt-3 justify-center">
-              ↑ 1.2% from last month
-            </app-badge>
+          <div appCardHeader class="flex items-center justify-between">
+            <div class="flex items-center gap-3">
+               <div class="w-1.5 h-6 bg-emerald-500 rounded-full"></div>
+               <h2 class="text-xl font-black text-slate-900 dark:text-white tracking-tight">Functional Headcount</h2>
+            </div>
+            <app-badge variant="info">Dept View</app-badge>
           </div>
-        </app-card>
-
-        <!-- On Leave -->
-        <app-card>
-          <div class="text-center">
-            <p class="text-sm font-medium text-slate-600 dark:text-slate-400">On Leave</p>
-            <p class="text-3xl font-bold text-yellow-600 dark:text-yellow-400 mt-2">
-              {{ onLeave() | number }}
-            </p>
-            <app-badge variant="warning" class="mt-3 justify-center">
-              ↑ 0.8% from last month
-            </app-badge>
-          </div>
-        </app-card>
-
-        <!-- New Hires -->
-        <app-card>
-          <div class="text-center">
-            <p class="text-sm font-medium text-slate-600 dark:text-slate-400">New Hires (Month)</p>
-            <p class="text-3xl font-bold text-blue-600 dark:text-blue-400 mt-2">
-              {{ newHires() | number }}
-            </p>
-            <app-badge variant="info" class="mt-3 justify-center">
-              ↑ 12% from last month
-            </app-badge>
-          </div>
-        </app-card>
-
-        <!-- Departures -->
-        <app-card>
-          <div class="text-center">
-            <p class="text-sm font-medium text-slate-600 dark:text-slate-400">Departures (Month)</p>
-            <p class="text-3xl font-bold text-red-600 dark:text-red-400 mt-2">
-              {{ departures() | number }}
-            </p>
-            <app-badge variant="error" class="mt-3 justify-center">
-              ↑ 5% from last month
-            </app-badge>
+          <div class="py-4">
+            @defer (on viewport) {
+              <app-chart
+                [chartConfig]="headcountByDepartmentChart()"
+                (chartClick)="onChartClick($event)"
+              ></app-chart>
+            } @placeholder {
+              <div class="h-[400px] flex items-center justify-center bg-slate-50/50 dark:bg-slate-900/20 rounded-2xl border border-dashed border-slate-200 dark:border-slate-700">
+                <span class="text-xs font-bold text-slate-400 uppercase tracking-widest animate-pulse">Analyzing Departments...</span>
+              </div>
+            }
           </div>
         </app-card>
       </div>
 
-      <!-- Metrics by Region -->
-      <app-card>
-        <div class="space-y-4">
-          <div class="flex items-center justify-between">
-            <h2 class="text-xl font-semibold text-slate-900 dark:text-white">
-              Headcount by Region
-            </h2>
-            <app-badge variant="info">Bar Chart</app-badge>
-          </div>
-          @defer (on viewport) {
-            <app-chart
-              [chartConfig]="headcountByRegionChart()"
-              (chartClick)="onChartClick($event)"
-            ></app-chart>
-          } @placeholder {
-            <div class="h-[400px] flex items-center justify-center bg-slate-50 dark:bg-slate-800/50 rounded-lg">
-              <span class="text-slate-400">Loading Regional Data...</span>
+      <!-- Employment Status & Historical Trends -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-8" [@slideInUp]>
+        <!-- Historical Trend -->
+        <app-card>
+          <div appCardHeader class="flex items-center justify-between">
+            <div class="flex items-center gap-3">
+               <div class="w-1.5 h-6 bg-indigo-400 rounded-full"></div>
+               <h2 class="text-xl font-black text-slate-900 dark:text-white tracking-tight">12-Month Momentum</h2>
             </div>
-          }
-        </div>
-      </app-card>
-
-      <!-- Metrics by Department -->
-      <app-card>
-        <div class="space-y-4">
-          <div class="flex items-center justify-between">
-            <h2 class="text-xl font-semibold text-slate-900 dark:text-white">
-              Headcount by Department
-            </h2>
-            <app-badge variant="info">Bar Chart</app-badge>
+            <app-badge variant="success">↑ 3.2% Trend</app-badge>
           </div>
-          @defer (on viewport) {
-            <app-chart
-              [chartConfig]="headcountByDepartmentChart()"
-              (chartClick)="onChartClick($event)"
-            ></app-chart>
-          } @placeholder {
-            <div class="h-[400px] flex items-center justify-center bg-slate-50 dark:bg-slate-800/50 rounded-lg">
-              <span class="text-slate-400">Loading Department Data...</span>
-            </div>
-          }
-        </div>
-      </app-card>
-
-      <!-- Employment Status Distribution -->
-      <app-card>
-        <div class="space-y-4">
-          <div class="flex items-center justify-between">
-            <h2 class="text-xl font-semibold text-slate-900 dark:text-white">
-              Employment Status Distribution
-            </h2>
-            <app-badge variant="info">Pie Chart</app-badge>
+          <div class="py-4">
+            @defer (on viewport) {
+              <app-chart
+                [chartConfig]="headcountTrendChart()"
+                (chartClick)="onChartClick($event)"
+              ></app-chart>
+            } @placeholder {
+              <div class="h-[400px] flex items-center justify-center bg-slate-50/50 dark:bg-slate-900/20 rounded-2xl border border-dashed border-slate-200 dark:border-slate-700">
+                <span class="text-xs font-bold text-slate-400 uppercase tracking-widest animate-pulse">Mapping Momentum...</span>
+              </div>
+            }
           </div>
-          @defer (on viewport) {
-            <app-chart
-              [chartConfig]="employmentStatusChart()"
-              (chartClick)="onChartClick($event)"
-            ></app-chart>
-          } @placeholder {
-            <div class="h-[400px] flex items-center justify-center bg-slate-50 dark:bg-slate-800/50 rounded-lg">
-              <span class="text-slate-400">Loading Status Distribution...</span>
-            </div>
-          }
-        </div>
-      </app-card>
+        </app-card>
 
-      <!-- Historical Trend Data (12 Months) -->
-      <app-card>
-        <div class="space-y-4">
-          <div class="flex items-center justify-between">
-            <h2 class="text-xl font-semibold text-slate-900 dark:text-white">
-              Headcount Trend (12 Months)
-            </h2>
-            <app-badge variant="success">↑ 3.2% growth</app-badge>
+        <!-- Employment Status -->
+        <app-card>
+          <div appCardHeader class="flex items-center justify-between">
+            <div class="flex items-center gap-3">
+               <div class="w-1.5 h-6 bg-amber-400 rounded-full"></div>
+               <h2 class="text-xl font-black text-slate-900 dark:text-white tracking-tight">Contractual Mix</h2>
+            </div>
+            <app-badge variant="info">Status Split</app-badge>
           </div>
-          @defer (on viewport) {
-            <app-chart
-              [chartConfig]="headcountTrendChart()"
-              (chartClick)="onChartClick($event)"
-            ></app-chart>
-          } @placeholder {
-            <div class="h-[400px] flex items-center justify-center bg-slate-50 dark:bg-slate-800/50 rounded-lg">
-              <span class="text-slate-400">Loading Trend Data...</span>
-            </div>
-          }
-        </div>
-      </app-card>
+          <div class="py-4">
+            @defer (on viewport) {
+              <app-chart
+                [chartConfig]="employmentStatusChart()"
+                (chartClick)="onChartClick($event)"
+              ></app-chart>
+            } @placeholder {
+              <div class="h-[400px] flex items-center justify-center bg-slate-50/50 dark:bg-slate-900/20 rounded-2xl border border-dashed border-slate-200 dark:border-slate-700">
+                <span class="text-xs font-bold text-slate-400 uppercase tracking-widest animate-pulse">Computing Mix...</span>
+              </div>
+            }
+          </div>
+        </app-card>
+      </div>
 
-      <!-- Drill-down Section -->
-      <app-card>
-        <div class="space-y-4">
-          <h2 class="text-xl font-semibold text-slate-900 dark:text-white">
-            Drill-Down to Employee Records
-          </h2>
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <!-- Advanced Drill-Down -->
+      <app-card class="mt-8" [@slideInUp]>
+        <div appCardHeader class="flex items-center gap-3">
+          <div class="w-1.5 h-6 bg-slate-400 rounded-full"></div>
+          <h2 class="text-xl font-black text-slate-900 dark:text-white tracking-tight">Strategic Drill-Down</h2>
+        </div>
+        <div class="py-6">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
             <button
               (click)="drillDownByRegion('Middle East')"
-              class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
+              class="group h-24 bg-slate-50 dark:bg-slate-900/40 border border-slate-200 dark:border-slate-700/50 rounded-2xl p-6 flex items-center justify-between hover:border-indigo-500/50 hover:bg-white dark:hover:bg-slate-800 transition-all duration-300"
             >
-              View Middle East Employees
+              <div class="text-left">
+                <p class="text-xs font-black text-slate-400 uppercase tracking-widest mb-1">Region Focus</p>
+                <p class="text-lg font-bold text-slate-900 dark:text-white">Middle East Force</p>
+              </div>
+              <div class="w-10 h-10 rounded-xl bg-indigo-50 dark:bg-indigo-900/40 flex items-center justify-center text-indigo-600 dark:text-indigo-400 group-hover:scale-110 transition-transform">
+                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
+              </div>
             </button>
+
             <button
               (click)="drillDownByRegion('Europe')"
-              class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
+               class="group h-24 bg-slate-50 dark:bg-slate-900/40 border border-slate-200 dark:border-slate-700/50 rounded-2xl p-6 flex items-center justify-between hover:border-indigo-500/50 hover:bg-white dark:hover:bg-slate-800 transition-all duration-300"
             >
-              View Europe Employees
+              <div class="text-left">
+                <p class="text-xs font-black text-slate-400 uppercase tracking-widest mb-1">Region Focus</p>
+                <p class="text-lg font-bold text-slate-900 dark:text-white">European Force</p>
+              </div>
+              <div class="w-10 h-10 rounded-xl bg-indigo-50 dark:bg-indigo-900/40 flex items-center justify-center text-indigo-600 dark:text-indigo-400 group-hover:scale-110 transition-transform">
+                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
+              </div>
             </button>
+
             <button
               (click)="drillDownByStatus('Active')"
-              class="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors"
+               class="group h-24 bg-slate-50 dark:bg-slate-900/40 border border-slate-200 dark:border-slate-700/50 rounded-2xl p-6 flex items-center justify-between hover:border-emerald-500/50 hover:bg-white dark:hover:bg-slate-800 transition-all duration-300"
             >
-              View Active Employees
+              <div class="text-left">
+                <p class="text-xs font-black text-slate-400 uppercase tracking-widest mb-1">Status Focus</p>
+                <p class="text-lg font-bold text-slate-900 dark:text-white">Active Personnel</p>
+              </div>
+              <div class="w-10 h-10 rounded-xl bg-emerald-50 dark:bg-emerald-900/40 flex items-center justify-center text-emerald-600 dark:text-emerald-400 group-hover:scale-110 transition-transform">
+                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
+              </div>
             </button>
           </div>
         </div>
