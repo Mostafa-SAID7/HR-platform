@@ -53,13 +53,13 @@ export class ConnectionStatusComponent implements OnInit {
     const status = this.wsService.getConnectionStatus();
     switch (status) {
       case 'connected':
-        return 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-200';
+        return 'bg-emerald-100 text-emerald-800 dark:bg-emerald-500/20 dark:text-emerald-300';
       case 'disconnected':
-        return 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200';
+        return 'bg-red-100 text-red-800 dark:bg-red-500/20 dark:text-red-400';
       case 'reconnecting':
-        return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200';
+        return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-500/20 dark:text-yellow-300';
       default:
-        return 'bg-slate-100 text-slate-800 dark:bg-slate-900 dark:text-slate-200';
+        return 'bg-slate-100 text-slate-800 dark:bg-slate-500/20 dark:text-slate-300';
     }
   }
 

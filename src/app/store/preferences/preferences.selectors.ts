@@ -22,24 +22,24 @@ export const selectLanguage = createSelector(selectPreferences, (prefs) => prefs
 
 export const selectDarkMode = createSelector(
   selectPreferences,
-  (prefs) => prefs?.darkMode || false,
+  (prefs) => prefs?.darkMode ?? false,
 );
 
 export const selectTheme = createSelector(selectPreferences, (prefs) => prefs?.theme || 'light');
 
 export const selectNotificationsEnabled = createSelector(
   selectPreferences,
-  (prefs) => prefs?.notificationsEnabled || true,
+  (prefs) => prefs?.notificationsEnabled ?? true,
 );
 
 export const selectEmailNotifications = createSelector(
   selectPreferences,
-  (prefs) => prefs?.emailNotifications || true,
+  (prefs) => prefs?.emailNotifications ?? true,
 );
 
 export const selectPushNotifications = createSelector(
   selectPreferences,
-  (prefs) => prefs?.pushNotifications || true,
+  (prefs) => prefs?.pushNotifications ?? true,
 );
 
 export const selectItemsPerPage = createSelector(

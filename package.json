@@ -28,6 +28,7 @@
     "@ngrx/entity": "^21.1.0",
     "@ngrx/store": "^21.1.0",
     "@ngrx/store-devtools": "^21.1.0",
+    "arabic-persian-reshaper": "^1.0.1",
     "echarts": "^6.0.0",
     "jspdf": "^4.2.1",
     "jspdf-autotable": "^5.0.7",
@@ -43,9 +44,11 @@
     "@tailwindcss/postcss": "^4.1.12",
     "@typescript-eslint/eslint-plugin": "^7.0.0",
     "@typescript-eslint/parser": "^7.0.0",
+    "axe-core": "^4.11.2",
     "eslint": "^8.56.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.1.2",
+    "fast-check": "^4.6.0",
     "husky": "^8.0.3",
     "jsdom": "^28.0.0",
     "lint-staged": "^15.2.2",
@@ -54,6 +57,7 @@
     "tailwindcss": "^4.1.12",
     "typescript": "~5.9.2",
     "vite-tsconfig-paths": "^6.1.1",
-    "vitest": "^4.0.8"
+    "vitest": "^4.0.8",
+    "vitest-axe": "^0.1.0"
   }
 }

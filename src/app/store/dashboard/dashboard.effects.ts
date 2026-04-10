@@ -3,6 +3,7 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { of } from 'rxjs';
 import { catchError, map, switchMap, retry, tap } from 'rxjs/operators';
 import * as DashboardActions from './dashboard.actions';
+import { DataService } from '../../services/data.service';
 
 /**
  * DashboardEffects handles side effects for dashboard-related operations.
@@ -10,6 +11,7 @@ import * as DashboardActions from './dashboard.actions';
 @Injectable()
 export class DashboardEffects {
   private actions$ = inject(Actions);
+  private dataService = inject(DataService);
 
   /**
    * Effect: Load Dashboard Configs
@@ -45,16 +47,8 @@ export class DashboardEffects {
   readonly loadDashboardMetrics$ = createEffect(() =>
     this.actions$.pipe(
       ofType(DashboardActions.loadDashboardMetrics),
-      switchMap(() => {
-        const defaultMetrics = {
-          totalHeadcount: 0,
-          activeEmployees: 0,
-          onLeave: 0,
-          newHires: 0,
-          departures: 0,
-          lastUpdated: new Date().toISOString(),
-        };
-        return of(defaultMetrics).pipe(
+      switchMap(() =>
+        this.dataService.getDashboardMetrics().pipe(
           retry({
             count: 3,
             delay: (error, retryCount) => {
@@ -70,8 +64,8 @@ export class DashboardEffects {
               }),
             ),
           ),
-        );
-      }),
+        )
+      ),
     ),
   );
 

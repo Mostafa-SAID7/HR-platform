@@ -1,8 +1,10 @@
-import { Component, OnInit, ChangeDetectionStrategy, signal } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CardComponent } from '../../components/card/card.component';
 import { ChartComponent, type ChartConfig } from '../../components/chart/chart.component';
 import { BadgeComponent } from '../../components/badge/badge.component';
+import { DataService } from '../../services/data.service';
+import { forkJoin } from 'rxjs';
 
 /**
  * Workforce Metrics Dashboard
@@ -21,11 +23,20 @@ import { BadgeComponent } from '../../components/badge/badge.component';
   template: `
     <div class="space-y-6">
       <!-- Header -->
-      <div>
-        <h1 class="text-3xl font-bold text-slate-900 dark:text-white">Workforce Metrics</h1>
-        <p class="text-slate-600 dark:text-slate-400 mt-2">
-          Monitor key workforce indicators and trends across regions and departments
-        </p>
+      <div class="flex items-center justify-between">
+        <div>
+          <h1 class="text-3xl font-bold text-slate-900 dark:text-white">Workforce Metrics</h1>
+          <p class="text-slate-600 dark:text-slate-400 mt-2">
+            Monitor key workforce indicators and trends across regions and departments
+          </p>
+        </div>
+        <div *ngIf="isLoading()" class="flex items-center text-indigo-500">
+          <svg class="animate-spin h-5 w-5 mr-3" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>
+          <span class="text-sm font-medium">Refreshing Data...</span>
+        </div>
       </div>
 
       <!-- KPI Cards -->
@@ -105,10 +116,16 @@ import { BadgeComponent } from '../../components/badge/badge.component';
             </h2>
             <app-badge variant="info">Bar Chart</app-badge>
           </div>
-          <app-chart
-            [chartConfig]="headcountByRegionChart()"
-            (chartClick)="onChartClick($event)"
-          ></app-chart>
+          @defer (on viewport) {
+            <app-chart
+              [chartConfig]="headcountByRegionChart()"
+              (chartClick)="onChartClick($event)"
+            ></app-chart>
+          } @placeholder {
+            <div class="h-[400px] flex items-center justify-center bg-slate-50 dark:bg-slate-800/50 rounded-lg">
+              <span class="text-slate-400">Loading Regional Data...</span>
+            </div>
+          }
         </div>
       </app-card>
 
@@ -121,10 +138,16 @@ import { BadgeComponent } from '../../components/badge/badge.component';
             </h2>
             <app-badge variant="info">Bar Chart</app-badge>
           </div>
-          <app-chart
-            [chartConfig]="headcountByDepartmentChart()"
-            (chartClick)="onChartClick($event)"
-          ></app-chart>
+          @defer (on viewport) {
+            <app-chart
+              [chartConfig]="headcountByDepartmentChart()"
+              (chartClick)="onChartClick($event)"
+            ></app-chart>
+          } @placeholder {
+            <div class="h-[400px] flex items-center justify-center bg-slate-50 dark:bg-slate-800/50 rounded-lg">
+              <span class="text-slate-400">Loading Department Data...</span>
+            </div>
+          }
         </div>
       </app-card>
 
@@ -137,10 +160,16 @@ import { BadgeComponent } from '../../components/badge/badge.component';
             </h2>
             <app-badge variant="info">Pie Chart</app-badge>
           </div>
-          <app-chart
-            [chartConfig]="employmentStatusChart()"
-            (chartClick)="onChartClick($event)"
-          ></app-chart>
+          @defer (on viewport) {
+            <app-chart
+              [chartConfig]="employmentStatusChart()"
+              (chartClick)="onChartClick($event)"
+            ></app-chart>
+          } @placeholder {
+            <div class="h-[400px] flex items-center justify-center bg-slate-50 dark:bg-slate-800/50 rounded-lg">
+              <span class="text-slate-400">Loading Status Distribution...</span>
+            </div>
+          }
         </div>
       </app-card>
 
@@ -153,10 +182,16 @@ import { BadgeComponent } from '../../components/badge/badge.component';
             </h2>
             <app-badge variant="success">↑ 3.2% growth</app-badge>
           </div>
-          <app-chart
-            [chartConfig]="headcountTrendChart()"
-            (chartClick)="onChartClick($event)"
-          ></app-chart>
+          @defer (on viewport) {
+            <app-chart
+              [chartConfig]="headcountTrendChart()"
+              (chartClick)="onChartClick($event)"
+            ></app-chart>
+          } @placeholder {
+            <div class="h-[400px] flex items-center justify-center bg-slate-50 dark:bg-slate-800/50 rounded-lg">
+              <span class="text-slate-400">Loading Trend Data...</span>
+            </div>
+          }
         </div>
       </app-card>
 
@@ -193,65 +228,40 @@ import { BadgeComponent } from '../../components/badge/badge.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WorkforceComponent implements OnInit {
-  totalHeadcount = signal<number>(12000);
-  activeEmployees = signal<number>(11850);
-  onLeave = signal<number>(150);
-  newHires = signal<number>(45);
-  departures = signal<number>(28);
+  private dataService = inject(DataService);
+
+  totalHeadcount = signal<number>(0);
+  activeEmployees = signal<number>(0);
+  onLeave = signal<number>(0);
+  newHires = signal<number>(0);
+  departures = signal<number>(0);
+  isLoading = signal<boolean>(true);
 
   headcountByRegionChart = signal<ChartConfig>({
     type: 'bar',
     title: 'Headcount by Region',
-    data: {
-      categories: ['Middle East', 'Europe'],
-      values: [6500, 5500],
-    },
+    data: { categories: [], values: [] },
     height: '400px',
   });
 
   headcountByDepartmentChart = signal<ChartConfig>({
     type: 'bar',
     title: 'Headcount by Department',
-    data: {
-      categories: ['Engineering', 'Sales', 'Marketing', 'HR', 'Finance', 'Operations'],
-      values: [2400, 2100, 1800, 1200, 1500, 3000],
-    },
+    data: { categories: [], values: [] },
     height: '400px',
   });
 
   employmentStatusChart = signal<ChartConfig>({
     type: 'pie',
     title: 'Employment Status Distribution',
-    data: {
-      values: [
-        { value: 11850, name: 'Active' },
-        { value: 100, name: 'On Leave' },
-        { value: 50, name: 'Inactive' },
-      ],
-    },
+    data: { values: [] },
     height: '400px',
   });
 
   headcountTrendChart = signal<ChartConfig>({
     type: 'line',
     title: 'Headcount Trend (Last 12 Months)',
-    data: {
-      categories: [
-        'Jan',
-        'Feb',
-        'Mar',
-        'Apr',
-        'May',
-        'Jun',
-        'Jul',
-        'Aug',
-        'Sep',
-        'Oct',
-        'Nov',
-        'Dec',
-      ],
-      values: [11650, 11700, 11750, 11800, 11850, 11900, 11950, 12000, 12050, 12100, 12150, 12200],
-    },
+    data: { categories: [], values: [] },
     height: '400px',
   });
 
@@ -260,22 +270,72 @@ export class WorkforceComponent implements OnInit {
   }
 
   private loadWorkforceData(): void {
-    // In a real application, this would fetch data from a service
-    // For now, we're using signal defaults
+    this.isLoading.set(true);
+    forkJoin({
+      summary: this.dataService.getDashboardMetrics(),
+      details: this.dataService.getWorkforceMetrics()
+    }).subscribe({
+      next: (data) => {
+        // Update summary KPIs
+        this.totalHeadcount.set(data.summary.totalHeadcount);
+        this.activeEmployees.set(data.summary.activeEmployees);
+        this.onLeave.set(data.summary.onLeave);
+        this.newHires.set(data.summary.newHires);
+        this.departures.set(data.summary.departures);
+
+        // Update Charts
+        this.headcountByRegionChart.update(config => ({
+          ...config,
+          data: {
+            categories: data.details.byRegion.map((r: any) => r.region),
+            values: data.details.byRegion.map((r: any) => r.headcount)
+          }
+        }));
+
+        this.headcountByDepartmentChart.update(config => ({
+          ...config,
+          data: {
+            categories: data.details.byDepartment.map((d: any) => d.department),
+            values: data.details.byDepartment.map((d: any) => d.headcount)
+          }
+        }));
+
+        this.employmentStatusChart.update(config => ({
+          ...config,
+          data: {
+            values: data.details.byStatus.map((s: any) => ({
+              name: s.status,
+              value: s.count
+            }))
+          }
+        }));
+
+        this.headcountTrendChart.update(config => ({
+          ...config,
+          data: {
+            categories: data.details.trends.map((t: any) => t.month),
+            values: data.details.trends.map((t: any) => t.headcount)
+          }
+        }));
+
+        this.isLoading.set(false);
+      },
+      error: (err) => {
+        console.error('Error loading workforce data:', err);
+        this.isLoading.set(false);
+      }
+    });
   }
 
   onChartClick(event: { name: string; value: unknown }): void {
     console.log('Chart clicked:', event);
-    // Handle drill-down based on chart click
   }
 
   drillDownByRegion(region: string): void {
     console.log('Drilling down to region:', region);
-    // In a real application, this would navigate to employee records filtered by region
   }
 
   drillDownByStatus(status: string): void {
     console.log('Drilling down to status:', status);
-    // In a real application, this would navigate to employee records filtered by status
   }
 }

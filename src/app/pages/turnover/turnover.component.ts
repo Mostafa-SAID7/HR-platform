@@ -1,8 +1,10 @@
-import { Component, OnInit, ChangeDetectionStrategy, signal } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CardComponent } from '../../components/card/card.component';
 import { ChartComponent, type ChartConfig } from '../../components/chart/chart.component';
 import { BadgeComponent } from '../../components/badge/badge.component';
+import { DataService } from '../../services/data.service';
+import { forkJoin } from 'rxjs';
 
 /**
  * Turnover Analysis Dashboard
@@ -20,11 +22,20 @@ import { BadgeComponent } from '../../components/badge/badge.component';
   template: `
     <div class="space-y-6">
       <!-- Header -->
-      <div>
-        <h1 class="text-3xl font-bold text-slate-900 dark:text-white">Turnover Analysis</h1>
-        <p class="text-slate-600 dark:text-slate-400 mt-2">
-          Analyze historical turnover patterns and predict future turnover trends
-        </p>
+      <div class="flex items-center justify-between">
+        <div>
+          <h1 class="text-3xl font-bold text-slate-900 dark:text-white">Turnover Analysis</h1>
+          <p class="text-slate-600 dark:text-slate-400 mt-2">
+            Analyze historical turnover patterns and predict future turnover trends
+          </p>
+        </div>
+        <div *ngIf="isLoading()" class="flex items-center text-indigo-500">
+          <svg class="animate-spin h-5 w-5 mr-3" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>
+          <span class="text-sm font-medium">Analyzing Patterns...</span>
+        </div>
       </div>
 
       <!-- Key Metrics -->
@@ -87,30 +98,20 @@ import { BadgeComponent } from '../../components/badge/badge.component';
         <div class="space-y-4">
           <div class="flex items-center justify-between">
             <h2 class="text-xl font-semibold text-slate-900 dark:text-white">
-              Turnover Rate by Department (24 Months)
+              Turnover Rate by Department
             </h2>
             <app-badge variant="info">Bar Chart</app-badge>
           </div>
-          <app-chart
-            [chartConfig]="turnoverByDepartmentChart()"
-            (chartClick)="onChartClick($event)"
-          ></app-chart>
-        </div>
-      </app-card>
-
-      <!-- Turnover by Region -->
-      <app-card>
-        <div class="space-y-4">
-          <div class="flex items-center justify-between">
-            <h2 class="text-xl font-semibold text-slate-900 dark:text-white">
-              Turnover Rate by Region (24 Months)
-            </h2>
-            <app-badge variant="info">Bar Chart</app-badge>
-          </div>
-          <app-chart
-            [chartConfig]="turnoverByRegionChart()"
-            (chartClick)="onChartClick($event)"
-          ></app-chart>
+          @defer (on viewport) {
+            <app-chart
+              [chartConfig]="turnoverByDepartmentChart()"
+              (chartClick)="onChartClick($event)"
+            ></app-chart>
+          } @placeholder {
+            <div class="h-[400px] flex items-center justify-center bg-slate-50 dark:bg-slate-800/50 rounded-lg">
+              <span class="text-slate-400">Loading Department turnover...</span>
+            </div>
+          }
         </div>
       </app-card>
 
@@ -123,10 +124,16 @@ import { BadgeComponent } from '../../components/badge/badge.component';
             </h2>
             <app-badge variant="warning">↑ Increasing trend</app-badge>
           </div>
-          <app-chart
-            [chartConfig]="turnoverTrendsChart()"
-            (chartClick)="onChartClick($event)"
-          ></app-chart>
+          @defer (on viewport) {
+            <app-chart
+              [chartConfig]="turnoverTrendsChart()"
+              (chartClick)="onChartClick($event)"
+            ></app-chart>
+          } @placeholder {
+            <div class="h-[400px] flex items-center justify-center bg-slate-50 dark:bg-slate-800/50 rounded-lg">
+              <span class="text-slate-400">Loading Turnover Trends...</span>
+            </div>
+          }
         </div>
       </app-card>
 
@@ -139,79 +146,16 @@ import { BadgeComponent } from '../../components/badge/badge.component';
             </h2>
             <app-badge variant="info">Prediction</app-badge>
           </div>
-          <app-chart
-            [chartConfig]="turnoverForecastChart()"
-            (chartClick)="onChartClick($event)"
-          ></app-chart>
-        </div>
-      </app-card>
-
-      <!-- Confidence Levels -->
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <app-card>
-          <div class="space-y-3">
-            <h3 class="text-lg font-semibold text-slate-900 dark:text-white">
-              Engineering Department
-            </h3>
-            <div class="space-y-2">
-              <div class="flex justify-between items-center">
-                <span class="text-sm text-slate-600 dark:text-slate-400">Predicted Turnover</span>
-                <span class="font-semibold text-slate-900 dark:text-white">8.2%</span>
-              </div>
-              <div class="flex justify-between items-center">
-                <span class="text-sm text-slate-600 dark:text-slate-400">Confidence Level</span>
-                <app-badge variant="success">High (92%)</app-badge>
-              </div>
+          @defer (on viewport) {
+            <app-chart
+              [chartConfig]="turnoverForecastChart()"
+              (chartClick)="onChartClick($event)"
+            ></app-chart>
+          } @placeholder {
+            <div class="h-[400px] flex items-center justify-center bg-slate-50 dark:bg-slate-800/50 rounded-lg">
+              <span class="text-slate-400">Loading Forecast...</span>
             </div>
-          </div>
-        </app-card>
-
-        <app-card>
-          <div class="space-y-3">
-            <h3 class="text-lg font-semibold text-slate-900 dark:text-white">Sales Department</h3>
-            <div class="space-y-2">
-              <div class="flex justify-between items-center">
-                <span class="text-sm text-slate-600 dark:text-slate-400">Predicted Turnover</span>
-                <span class="font-semibold text-slate-900 dark:text-white">12.5%</span>
-              </div>
-              <div class="flex justify-between items-center">
-                <span class="text-sm text-slate-600 dark:text-slate-400">Confidence Level</span>
-                <app-badge variant="warning">Medium (78%)</app-badge>
-              </div>
-            </div>
-          </div>
-        </app-card>
-
-        <app-card>
-          <div class="space-y-3">
-            <h3 class="text-lg font-semibold text-slate-900 dark:text-white">HR Department</h3>
-            <div class="space-y-2">
-              <div class="flex justify-between items-center">
-                <span class="text-sm text-slate-600 dark:text-slate-400">Predicted Turnover</span>
-                <span class="font-semibold text-slate-900 dark:text-white">5.8%</span>
-              </div>
-              <div class="flex justify-between items-center">
-                <span class="text-sm text-slate-600 dark:text-slate-400">Confidence Level</span>
-                <app-badge variant="success">High (88%)</app-badge>
-              </div>
-            </div>
-          </div>
-        </app-card>
-      </div>
-
-      <!-- Turnover by Role -->
-      <app-card>
-        <div class="space-y-4">
-          <div class="flex items-center justify-between">
-            <h2 class="text-xl font-semibold text-slate-900 dark:text-white">
-              Turnover Rate by Role
-            </h2>
-            <app-badge variant="info">Bar Chart</app-badge>
-          </div>
-          <app-chart
-            [chartConfig]="turnoverByRoleChart()"
-            (chartClick)="onChartClick($event)"
-          ></app-chart>
+          }
         </div>
       </app-card>
     </div>
@@ -219,84 +163,32 @@ import { BadgeComponent } from '../../components/badge/badge.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TurnoverComponent implements OnInit {
-  currentTurnoverRate = signal<number>(2.3);
-  departuresThisMonth = signal<number>(28);
-  averageTenure = signal<number>(5.2);
-  highRiskRoles = signal<number>(12);
+  private dataService = inject(DataService);
+
+  isLoading = signal<boolean>(true);
+  currentTurnoverRate = signal<number>(0);
+  departuresThisMonth = signal<number>(0);
+  averageTenure = signal<number>(0);
+  highRiskRoles = signal<number>(0);
 
   turnoverByDepartmentChart = signal<ChartConfig>({
     type: 'bar',
     title: 'Turnover Rate by Department',
-    data: {
-      categories: ['Engineering', 'Sales', 'Marketing', 'HR', 'Finance', 'Operations'],
-      values: [2.1, 4.5, 3.2, 1.8, 2.5, 3.1],
-    },
-    height: '400px',
-  });
-
-  turnoverByRegionChart = signal<ChartConfig>({
-    type: 'bar',
-    title: 'Turnover Rate by Region',
-    data: {
-      categories: ['Middle East', 'Europe'],
-      values: [2.5, 2.1],
-    },
+    data: { categories: [], values: [] },
     height: '400px',
   });
 
   turnoverTrendsChart = signal<ChartConfig>({
     type: 'line',
     title: 'Turnover Trends (Last 24 Months)',
-    data: {
-      categories: Array.from({ length: 24 }, (_, i) => {
-        const months = [
-          'Jan',
-          'Feb',
-          'Mar',
-          'Apr',
-          'May',
-          'Jun',
-          'Jul',
-          'Aug',
-          'Sep',
-          'Oct',
-          'Nov',
-          'Dec',
-        ];
-        return months[i % 12] + ' ' + Math.floor(i / 12);
-      }),
-      values: [
-        1.8, 1.9, 2.0, 2.1, 2.2, 2.3, 2.4, 2.3, 2.2, 2.3, 2.4, 2.5, 2.6, 2.7, 2.8, 2.9, 3.0, 2.9,
-        2.8, 2.7, 2.6, 2.5, 2.4, 2.3,
-      ],
-    },
+    data: { categories: [], values: [] },
     height: '400px',
   });
 
   turnoverForecastChart = signal<ChartConfig>({
     type: 'line',
     title: '6-Month Turnover Forecast',
-    data: {
-      categories: ['Current', 'Month 1', 'Month 2', 'Month 3', 'Month 4', 'Month 5', 'Month 6'],
-      values: [2.3, 2.4, 2.5, 2.6, 2.7, 2.8, 2.9],
-    },
-    height: '400px',
-  });
-
-  turnoverByRoleChart = signal<ChartConfig>({
-    type: 'bar',
-    title: 'Turnover Rate by Role',
-    data: {
-      categories: [
-        'Senior Manager',
-        'Manager',
-        'Senior Developer',
-        'Developer',
-        'Analyst',
-        'Coordinator',
-      ],
-      values: [1.2, 2.5, 1.8, 3.2, 2.8, 4.1],
-    },
+    data: { categories: [], values: [] },
     height: '400px',
   });
 
@@ -305,12 +197,63 @@ export class TurnoverComponent implements OnInit {
   }
 
   private loadTurnoverData(): void {
-    // In a real application, this would fetch data from a service
-    // Calculate turnover rate: (departures / avg headcount) × 100
+    this.isLoading.set(true);
+    forkJoin({
+      summary: this.dataService.getDashboardMetrics(),
+      details: this.dataService.getTurnoverMetrics()
+    }).subscribe({
+      next: (data) => {
+        // Summary KPIs
+        this.currentTurnoverRate.set(data.summary.turnoverRate);
+        this.departuresThisMonth.set(data.summary.departures);
+        this.averageTenure.set(data.summary.averageTenure);
+        this.highRiskRoles.set(data.summary.highRiskRoles);
+
+        // Chart: Dept Breakdown
+        this.turnoverByDepartmentChart.update(config => ({
+          ...config,
+          data: {
+            categories: data.details.byDepartment.map((d: any) => d.department),
+            values: data.details.byDepartment.map((d: any) => d.rate)
+          }
+        }));
+
+        // Chart: Trends (Using dummy 24 month data as placeholder if not in JSON)
+        this.turnoverTrendsChart.update(config => ({
+          ...config,
+          data: {
+            categories: Array.from({ length: 24 }, (_, i) => {
+              const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+              return months[i % 12] + ' ' + (2023 + Math.floor(i / 12));
+            }),
+            values: [1.8, 1.9, 2.0, 2.1, 2.2, 2.3, 2.4, 2.3, 2.2, 2.3, 2.4, 2.5, 2.6, 2.7, 2.8, 2.9, 3.0, 2.9, 2.8, 2.7, 2.6, 2.5, 2.4, 2.3]
+          }
+        }));
+
+        // Chart: Forecast
+        this.turnoverForecastChart.update(config => ({
+          ...config,
+          data: {
+            categories: ['Current', 'Month 1', 'Month 2', 'Month 3', 'Month 4', 'Month 5', 'Month 6'],
+            values: [data.summary.turnoverRate, 2.4, 2.5, 2.6, 2.7, 2.8, 2.9]
+          }
+        }));
+
+        this.isLoading.set(false);
+      },
+      error: (err) => {
+        console.error('Error loading turnover data:', err);
+        this.isLoading.set(false);
+      }
+    });
   }
 
   onChartClick(event: { name: string; value: unknown }): void {
     console.log('Chart clicked:', event);
-    // Handle drill-down based on chart click
+  }
+
+  static calculateTurnoverRate(departures: number, avgCount: number): number {
+    if (avgCount === 0) return 0;
+    return parseFloat(((departures / avgCount) * 100).toFixed(1));
   }
 }

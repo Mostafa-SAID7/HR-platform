@@ -1,5 +1,4 @@
 import { defineConfig } from 'vite';
-import angular from '@angular/build';
 import tsconfigPaths from 'vite-tsconfig-paths';
 
 export default defineConfig({

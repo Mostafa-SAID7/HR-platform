@@ -91,16 +91,16 @@ export class I18nService {
    */
   translate(key: string): string {
     const keys = key.split('.');
-    let result = this.translations();
+    let result: any = this.translations();
 
     for (const k of keys) {
-      if (result && result[k]) {
+      if (result && result[k] !== undefined) {
         result = result[k];
       } else {
-        return key; // Return key if translation not found
+        return ''; // Return empty so template || fallbacks work
       }
     }
 
-    return typeof result === 'string' ? result : key;
+    return typeof result === 'string' ? result : '';
   }
 }

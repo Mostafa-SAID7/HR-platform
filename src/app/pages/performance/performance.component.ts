@@ -1,8 +1,10 @@
-import { Component, OnInit, ChangeDetectionStrategy, signal } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CardComponent } from '../../components/card/card.component';
 import { ChartComponent, type ChartConfig } from '../../components/chart/chart.component';
 import { BadgeComponent } from '../../components/badge/badge.component';
+import { DataService } from '../../services/data.service';
+import { forkJoin } from 'rxjs';
 
 /**
  * Performance Analytics Dashboard
@@ -20,11 +22,20 @@ import { BadgeComponent } from '../../components/badge/badge.component';
   template: `
     <div class="space-y-6">
       <!-- Header -->
-      <div>
-        <h1 class="text-3xl font-bold text-slate-900 dark:text-white">Performance Analytics</h1>
-        <p class="text-slate-600 dark:text-slate-400 mt-2">
-          Track employee performance metrics, trends, and departmental comparisons
-        </p>
+      <div class="flex items-center justify-between">
+        <div>
+          <h1 class="text-3xl font-bold text-slate-900 dark:text-white">Performance Analytics</h1>
+          <p class="text-slate-600 dark:text-slate-400 mt-2">
+            Track employee performance metrics, trends, and departmental comparisons
+          </p>
+        </div>
+        <div *ngIf="isLoading()" class="flex items-center text-indigo-500">
+          <svg class="animate-spin h-5 w-5 mr-3" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>
+          <span class="text-sm font-medium">Loading Analysis...</span>
+        </div>
       </div>
 
       <!-- Performance Distribution Histogram -->
@@ -36,10 +47,16 @@ import { BadgeComponent } from '../../components/badge/badge.component';
             </h2>
             <app-badge variant="info">Histogram</app-badge>
           </div>
-          <app-chart
-            [chartConfig]="performanceDistributionChart()"
-            (chartClick)="onChartClick($event)"
-          ></app-chart>
+          @defer (on viewport) {
+            <app-chart
+              [chartConfig]="performanceDistributionChart()"
+              (chartClick)="onChartClick($event)"
+            ></app-chart>
+          } @placeholder {
+            <div class="h-[400px] flex items-center justify-center bg-slate-50 dark:bg-slate-800/50 rounded-lg">
+              <span class="text-slate-400">Loading Distribution Chart...</span>
+            </div>
+          }
         </div>
       </app-card>
 
@@ -52,10 +69,16 @@ import { BadgeComponent } from '../../components/badge/badge.component';
             </h2>
             <app-badge variant="success">↑ 3.2% improvement</app-badge>
           </div>
-          <app-chart
-            [chartConfig]="performanceTrendsChart()"
-            (chartClick)="onChartClick($event)"
-          ></app-chart>
+          @defer (on viewport) {
+            <app-chart
+              [chartConfig]="performanceTrendsChart()"
+              (chartClick)="onChartClick($event)"
+            ></app-chart>
+          } @placeholder {
+            <div class="h-[400px] flex items-center justify-center bg-slate-50 dark:bg-slate-800/50 rounded-lg">
+              <span class="text-slate-400">Loading Trends Chart...</span>
+            </div>
+          }
         </div>
       </app-card>
 
@@ -68,10 +91,16 @@ import { BadgeComponent } from '../../components/badge/badge.component';
               <h2 class="text-xl font-semibold text-slate-900 dark:text-white">Rating Breakdown</h2>
               <app-badge variant="info">Pie Chart</app-badge>
             </div>
-            <app-chart
-              [chartConfig]="performanceRatingChart()"
-              (chartClick)="onChartClick($event)"
-            ></app-chart>
+            @defer (on viewport) {
+              <app-chart
+                [chartConfig]="performanceRatingChart()"
+                (chartClick)="onChartClick($event)"
+              ></app-chart>
+            } @placeholder {
+              <div class="h-[400px] flex items-center justify-center bg-slate-50 dark:bg-slate-800/50 rounded-lg">
+                <span class="text-slate-400">Loading Rating Chart...</span>
+              </div>
+            }
           </div>
         </app-card>
 
@@ -84,10 +113,16 @@ import { BadgeComponent } from '../../components/badge/badge.component';
               </h2>
               <app-badge variant="info">Scatter Plot</app-badge>
             </div>
-            <app-chart
-              [chartConfig]="performanceVsSalaryChart()"
-              (chartClick)="onChartClick($event)"
-            ></app-chart>
+            @defer (on viewport) {
+              <app-chart
+                [chartConfig]="performanceVsSalaryChart()"
+                (chartClick)="onChartClick($event)"
+              ></app-chart>
+            } @placeholder {
+              <div class="h-[400px] flex items-center justify-center bg-slate-50 dark:bg-slate-800/50 rounded-lg">
+                <span class="text-slate-400">Loading Analysis Chart...</span>
+              </div>
+            }
           </div>
         </app-card>
       </div>
@@ -101,10 +136,16 @@ import { BadgeComponent } from '../../components/badge/badge.component';
             </h2>
             <app-badge variant="info">Bar Chart</app-badge>
           </div>
-          <app-chart
-            [chartConfig]="departmentComparisonChart()"
-            (chartClick)="onChartClick($event)"
-          ></app-chart>
+          @defer (on viewport) {
+            <app-chart
+              [chartConfig]="departmentComparisonChart()"
+              (chartClick)="onChartClick($event)"
+            ></app-chart>
+          } @placeholder {
+            <div class="h-[400px] flex items-center justify-center bg-slate-50 dark:bg-slate-800/50 rounded-lg">
+              <span class="text-slate-400">Loading Department Chart...</span>
+            </div>
+          }
         </div>
       </app-card>
 
@@ -167,80 +208,42 @@ import { BadgeComponent } from '../../components/badge/badge.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PerformanceComponent implements OnInit {
+  private dataService = inject(DataService);
+
+  isLoading = signal<boolean>(true);
+  averagePerformanceScore = signal<number>(0);
+  highPerformersCount = signal<number>(0);
+  needsImprovementCount = signal<number>(0);
+  reviewsCompletedPercentage = signal<number>(0);
+
   performanceDistributionChart = signal<ChartConfig>({
     type: 'bar',
     title: 'Performance Score Distribution',
-    data: {
-      categories: ['0-20', '20-40', '40-60', '60-80', '80-100'],
-      values: [45, 120, 380, 650, 805],
-    },
+    data: { categories: [], values: [] },
     height: '400px',
   });
 
   performanceTrendsChart = signal<ChartConfig>({
     type: 'line',
     title: 'Performance Trends (Last 12 Months)',
-    data: {
-      categories: [
-        'Jan',
-        'Feb',
-        'Mar',
-        'Apr',
-        'May',
-        'Jun',
-        'Jul',
-        'Aug',
-        'Sep',
-        'Oct',
-        'Nov',
-        'Dec',
-      ],
-      values: [68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79],
-    },
+    data: { categories: [], values: [] },
     height: '400px',
   });
 
   performanceRatingChart = signal<ChartConfig>({
     type: 'pie',
     title: 'Performance Rating Distribution',
-    data: {
-      values: [
-        { value: 805, name: 'Excellent (80-100)' },
-        { value: 650, name: 'Good (60-80)' },
-        { value: 380, name: 'Average (40-60)' },
-        { value: 120, name: 'Below Average (20-40)' },
-        { value: 45, name: 'Poor (0-20)' },
-      ],
-    },
+    data: { values: [] },
     height: '400px',
   });
 
   performanceVsSalaryChart = signal<ChartConfig>({
     type: 'scatter',
     title: 'Performance vs Salary Analysis',
-    data: {
-      values: [
-        [45000, 65],
-        [50000, 72],
-        [55000, 78],
-        [60000, 82],
-        [65000, 85],
-        [70000, 88],
-        [75000, 90],
-        [80000, 92],
-        [85000, 94],
-        [90000, 96],
-      ],
-    },
+    data: { values: [] },
     options: {
-      xAxis: {
-        name: 'Salary ($)',
-        type: 'value',
-      },
-      yAxis: {
-        name: 'Performance Score',
-        type: 'value',
-      },
+      xAxis: { name: 'Salary ($)', type: 'value' },
+      yAxis: { name: 'Performance Score', type: 'value' },
     },
     height: '400px',
   });
@@ -248,30 +251,83 @@ export class PerformanceComponent implements OnInit {
   departmentComparisonChart = signal<ChartConfig>({
     type: 'bar',
     title: 'Average Performance Score by Department',
-    data: {
-      categories: ['Engineering', 'Sales', 'Marketing', 'HR', 'Finance', 'Operations'],
-      values: [82, 75, 78, 80, 79, 76],
-    },
+    data: { categories: [], values: [] },
     height: '400px',
   });
 
-  averagePerformanceScore = signal<number>(79);
-  highPerformersCount = signal<number>(805);
-  needsImprovementCount = signal<number>(165);
-  reviewsCompletedPercentage = signal<number>(94);
-
   ngOnInit(): void {
-    // In a real application, this would fetch data from a service
     this.loadPerformanceData();
   }
 
   private loadPerformanceData(): void {
-    // Simulate data loading
-    // In production, this would call an analytics service
+    this.isLoading.set(true);
+    forkJoin({
+      summary: this.dataService.getDashboardMetrics(),
+      details: this.dataService.getPerformanceMetrics(),
+      employees: this.dataService.getEmployees()
+    }).subscribe({
+      next: (data) => {
+        // Summary KPIs
+        this.averagePerformanceScore.set(data.summary.averagePerformance);
+        this.highPerformersCount.set(data.summary.highPerformers);
+        this.needsImprovementCount.set(data.summary.needsImprovement);
+        this.reviewsCompletedPercentage.set(data.summary.reviewsCompleted);
+
+        // Chart: Distribution
+        this.performanceDistributionChart.update(config => ({
+          ...config,
+          data: {
+            categories: data.details.distribution.map((d: any) => d.range),
+            values: data.details.distribution.map((d: any) => d.count)
+          }
+        }));
+
+        // Chart: Trends
+        this.performanceTrendsChart.update(config => ({
+          ...config,
+          data: {
+            categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+            values: [68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79] // Keep dummy trends if not in JSON or fetch from details
+          }
+        }));
+
+        // Chart: Rating Breakdown
+        this.performanceRatingChart.update(config => ({
+          ...config,
+          data: {
+            values: data.details.distribution.map((d: any) => ({
+              name: d.range,
+              value: d.count
+            }))
+          }
+        }));
+
+        // Chart: Performance vs Salary (Derived from employee data)
+        const scatterData = data.employees.map((e: any) => [e.salary, e.performanceScore]);
+        this.performanceVsSalaryChart.update(config => ({
+          ...config,
+          data: { values: scatterData }
+        }));
+
+        // Chart: Dept Comparison
+        this.departmentComparisonChart.update(config => ({
+          ...config,
+          data: {
+            categories: data.details.byDepartment.map((d: any) => d.department),
+            values: data.details.byDepartment.map((d: any) => d.score)
+          }
+        }));
+
+        this.isLoading.set(false);
+      },
+      error: (err) => {
+        console.error('Error loading performance data:', err);
+        this.isLoading.set(false);
+      }
+    });
   }
 
   onChartClick(event: { name: string; value: unknown }): void {
     console.log('Chart clicked:', event);
-    // Handle drill-down or navigation based on chart click
   }
 }

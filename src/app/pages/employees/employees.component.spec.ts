@@ -199,4 +199,10 @@ describe('EmployeesComponent', () => {
 
     expect(component.filteredEmployees().length).toBe(1); // Only John Doe
   });
+
+  it('should pass accessibility checks', async () => {
+    const { checkA11y } = await import('../../testing/a11y-utils');
+    fixture.detectChanges();
+    await checkA11y(fixture);
+  });
 });

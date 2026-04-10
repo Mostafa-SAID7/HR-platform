@@ -1,0 +1,69 @@
+[
+  {
+    "id": "performance",
+    "name": "Performance Analytics",
+    "description": "Employee performance metrics, trends, and departmental comparisons",
+    "metrics": [
+      { "name": "Average Performance Score", "value": 79, "unit": "points" },
+      { "name": "High Performers", "value": 805, "unit": "employees" },
+      { "name": "Needs Improvement", "value": 165, "unit": "employees" },
+      { "name": "Reviews Completed", "value": 94, "unit": "%" }
+    ]
+  },
+  {
+    "id": "workforce",
+    "name": "Workforce Metrics",
+    "description": "Headcount, active employees, new hires, and departures by region/department",
+    "metrics": [
+      { "name": "Total Headcount", "value": 12000, "unit": "employees" },
+      { "name": "Active Employees", "value": 11850, "unit": "employees" },
+      { "name": "On Leave", "value": 150, "unit": "employees" },
+      { "name": "New Hires (Month)", "value": 45, "unit": "employees" },
+      { "name": "Departures (Month)", "value": 28, "unit": "employees" }
+    ]
+  },
+  {
+    "id": "turnover",
+    "name": "Turnover Analysis",
+    "description": "Historical turnover rates, trends, and 6-month predictions",
+    "metrics": [
+      { "name": "Current Turnover Rate", "value": 2.3, "unit": "%" },
+      { "name": "Departures (This Month)", "value": 28, "unit": "employees" },
+      { "name": "Average Tenure", "value": 5.2, "unit": "years" },
+      { "name": "High Risk Roles", "value": 12, "unit": "roles" }
+    ]
+  },
+  {
+    "id": "hiring",
+    "name": "Hiring Forecast",
+    "description": "12-month hiring forecasts by department and role with confidence levels",
+    "metrics": [
+      { "name": "Total Predicted Hires (12M)", "value": 275, "unit": "employees" },
+      { "name": "Average Monthly Hires", "value": 23, "unit": "employees" },
+      { "name": "Critical Roles at Risk", "value": 12, "unit": "roles" },
+      { "name": "Average Confidence Level", "value": 89, "unit": "%" }
+    ]
+  },
+  {
+    "id": "comprehensive",
+    "name": "Comprehensive HR Report",
+    "description": "Complete overview of all HR metrics and analytics",
+    "metrics": [
+      { "name": "Total Headcount", "value": 12000, "unit": "employees" },
+      { "name": "Average Performance Score", "value": 79, "unit": "points" },
+      { "name": "Turnover Rate", "value": 2.3, "unit": "%" },
+      { "name": "Predicted Hires (12M)", "value": 275, "unit": "employees" }
+    ]
+  },
+  {
+    "id": "executive",
+    "name": "Executive Summary",
+    "description": "High-level overview for leadership and executives",
+    "metrics": [
+      { "name": "Total Headcount", "value": 12000, "unit": "employees" },
+      { "name": "Headcount Growth", "value": 2.5, "unit": "%" },
+      { "name": "Turnover Rate", "value": 2.3, "unit": "%" },
+      { "name": "Average Performance", "value": 79, "unit": "points" }
+    ]
+  }
+]

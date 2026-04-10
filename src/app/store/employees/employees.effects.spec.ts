@@ -3,17 +3,25 @@ import { provideMockActions } from '@ngrx/effects/testing';
 import { Subject, firstValueFrom } from 'rxjs';
 import { EmployeeEffects } from './employees.effects';
 import * as EmployeeActions from './employees.actions';
+import { DataService } from '../../services/data.service';
+import { of } from 'rxjs';
 
 describe('EmployeeEffects', () => {
   let employeeEffects: EmployeeEffects;
   let actions$: Subject<any>;
+  let mockDataService: any;
 
   beforeEach(() => {
     actions$ = new Subject();
+    mockDataService = {
+      getEmployees: () => of([]),
+    };
+
     TestBed.configureTestingModule({
       providers: [
         EmployeeEffects,
         provideMockActions(() => actions$),
+        { provide: DataService, useValue: mockDataService },
       ],
     });
 

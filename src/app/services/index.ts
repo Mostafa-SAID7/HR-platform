@@ -14,3 +14,6 @@ export {
   type ReportMetric,
   type ReportData,
 } from './report.service';
+
+// Authentication Service
+export { AuthService } from './auth.service';

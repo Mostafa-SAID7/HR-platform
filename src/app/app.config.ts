@@ -16,9 +16,11 @@ import { EmployeeEffects } from './store/employees/employees.effects';
 import { PerformanceEffects } from './store/performance/performance.effects';
 import { PreferencesEffects } from './store/preferences/preferences.effects';
 import { DashboardEffects } from './store/dashboard/dashboard.effects';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 
 export const appConfig: ApplicationConfig = {
   providers: [
+    provideAnimationsAsync(),
     provideBrowserGlobalErrorListeners(),
     provideRouter(routes),
     provideHttpClient(),

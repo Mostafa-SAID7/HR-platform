@@ -25,7 +25,13 @@
     "previous": "Previous",
     "next": "Next",
     "page": "Page",
-    "of": "of"
+    "of": "of",
+    "select_all": "Select all",
+    "sort_by": "Sort by",
+    "expand": "Expand details",
+    "showing": "Showing",
+    "to": "to",
+    "no_records": "No records found"
   },
   "dashboard": {
     "real_time": "Real-time Metrics",

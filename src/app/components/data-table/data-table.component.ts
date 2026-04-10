@@ -84,7 +84,7 @@ export interface SortState {
       <div class="flex-1 flex flex-col min-h-0">
         <!-- Column Headers -->
         <div
-          class="flex bg-slate-50 dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700 sticky top-0 z-10"
+          class="flex bg-slate-100 dark:bg-slate-800/80 border-b border-slate-200 dark:border-slate-700 sticky top-0 z-10"
         >
           <div class="w-12 px-4 py-3 flex items-center justify-center">
             <input
@@ -191,6 +191,12 @@ export interface SortState {
               </div>
             </div>
           </ng-container>
+        <!-- Empty State -->
+        <div *ngIf="paginatedData().length === 0" class="flex flex-col items-center justify-center p-12 text-slate-500 dark:text-slate-400 h-full">
+          <app-icon name="document-magnifying-glass" class="w-12 h-12 text-slate-400 dark:text-slate-500 mb-4"></app-icon>
+          <p class="text-lg font-medium text-slate-900 dark:text-slate-200">{{ i18n.translate('common.no_records') }}</p>
+          <p class="text-sm mt-1">Try adjusting your filters or search query.</p>
+        </div>
         </cdk-virtual-scroll-viewport>
       </div>
 

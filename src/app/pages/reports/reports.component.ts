@@ -1,10 +1,11 @@
-import { Component, OnInit, ChangeDetectionStrategy, signal } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CardComponent } from '../../components/card/card.component';
 import { BadgeComponent } from '../../components/badge/badge.component';
 import { ButtonComponent } from '../../components/button/button.component';
 import { ReportService, type ReportConfig, type ReportMetric } from '../../services/report.service';
+import { DataService } from '../../services/data.service';
 
 /**
  * Report Generation and Export Page
@@ -30,21 +31,29 @@ interface ReportTemplate {
     FormsModule,
     CardComponent,
     BadgeComponent,
-    ButtonComponent,
   ],
   template: `
     <div class="space-y-6">
       <!-- Header -->
-      <div>
-        <h1 class="text-3xl font-bold text-slate-900 dark:text-white">Report Generation</h1>
-        <p class="text-slate-600 dark:text-slate-400 mt-2">
-          Create and export custom reports in multiple formats
-        </p>
+      <div class="flex items-center justify-between">
+        <div>
+          <h1 class="text-3xl font-bold text-slate-900 dark:text-white">Report Generation</h1>
+          <p class="text-slate-600 dark:text-slate-400 mt-2">
+            Create and export custom reports in multiple formats
+          </p>
+        </div>
+        <div *ngIf="isLoading()" class="flex items-center text-indigo-500">
+          <svg class="animate-spin h-5 w-5 mr-3" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>
+          <span class="text-sm font-medium">Fetching Templates...</span>
+        </div>
       </div>
 
       <!-- Report Builder -->
       <app-card>
-        <div class="space-y-6">
+        <div class="space-y-6 max-w-2xl">
           <h2 class="text-xl font-semibold text-slate-900 dark:text-white">Report Builder</h2>
 
           <!-- Report Template Selection -->
@@ -185,21 +194,21 @@ interface ReportTemplate {
           <div class="flex gap-4 pt-4">
             <button
               (click)="exportReport('pdf')"
-              class="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors font-medium"
+              class="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors font-medium text-sm"
             >
-              📄 Export as PDF
+              📄 PDF
             </button>
             <button
               (click)="exportReport('csv')"
-              class="px-6 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors font-medium"
+              class="px-6 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors font-medium text-sm"
             >
-              📊 Export as CSV
+              📊 CSV
             </button>
             <button
               (click)="exportReport('excel')"
-              class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
+              class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium text-sm"
             >
-              📈 Export as Excel
+              📈 Excel
             </button>
           </div>
         </div>
@@ -212,15 +221,15 @@ interface ReportTemplate {
         </h2>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <app-card *ngFor="let template of reportTemplates()">
-            <div class="space-y-3">
+            <div class="space-y-3 flex flex-col h-full">
               <h3 class="text-lg font-semibold text-slate-900 dark:text-white">
                 {{ template.name }}
               </h3>
-              <p class="text-sm text-slate-600 dark:text-slate-400">{{ template.description }}</p>
+              <p class="text-sm text-slate-600 dark:text-slate-400 flex-grow">{{ template.description }}</p>
               <div class="flex gap-2 pt-2">
                 <button
                   (click)="selectTemplate(template)"
-                  class="flex-1 px-3 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors text-sm font-medium"
+                  class="flex-1 px-3 py-2 bg-indigo-600/10 text-indigo-600 dark:text-indigo-400 rounded-lg hover:bg-indigo-600 hover:text-white transition-colors text-sm font-medium"
                 >
                   Use Template
                 </button>
@@ -237,7 +246,7 @@ interface ReportTemplate {
           <div class="space-y-3">
             <div
               *ngFor="let report of recentReports()"
-              class="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-700 rounded-lg"
+              class="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-700/50 rounded-lg"
             >
               <div>
                 <p class="font-semibold text-slate-900 dark:text-white">{{ report.name }}</p>
@@ -255,6 +264,10 @@ interface ReportTemplate {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ReportsComponent implements OnInit {
+  private dataService = inject(DataService);
+  private reportService = inject(ReportService);
+
+  isLoading = signal<boolean>(true);
   reportTitle = 'HR Analytics Report';
   startDate = '';
   endDate = '';
@@ -264,83 +277,13 @@ export class ReportsComponent implements OnInit {
   selectedStatus = '';
   selectedLanguage: 'en' | 'ar' = 'en';
 
-  reportTemplates = signal<ReportTemplate[]>([
-    {
-      id: 'performance',
-      name: 'Performance Analytics',
-      description: 'Employee performance metrics, trends, and departmental comparisons',
-      metrics: [
-        { name: 'Average Performance Score', value: 79, unit: 'points' },
-        { name: 'High Performers', value: 805, unit: 'employees' },
-        { name: 'Needs Improvement', value: 165, unit: 'employees' },
-        { name: 'Reviews Completed', value: 94, unit: '%' },
-      ],
-    },
-    {
-      id: 'workforce',
-      name: 'Workforce Metrics',
-      description: 'Headcount, active employees, new hires, and departures by region/department',
-      metrics: [
-        { name: 'Total Headcount', value: 12000, unit: 'employees' },
-        { name: 'Active Employees', value: 11850, unit: 'employees' },
-        { name: 'On Leave', value: 150, unit: 'employees' },
-        { name: 'New Hires (Month)', value: 45, unit: 'employees' },
-        { name: 'Departures (Month)', value: 28, unit: 'employees' },
-      ],
-    },
-    {
-      id: 'turnover',
-      name: 'Turnover Analysis',
-      description: 'Historical turnover rates, trends, and 6-month predictions',
-      metrics: [
-        { name: 'Current Turnover Rate', value: 2.3, unit: '%' },
-        { name: 'Departures (This Month)', value: 28, unit: 'employees' },
-        { name: 'Average Tenure', value: 5.2, unit: 'years' },
-        { name: 'High Risk Roles', value: 12, unit: 'roles' },
-      ],
-    },
-    {
-      id: 'hiring',
-      name: 'Hiring Forecast',
-      description: '12-month hiring forecasts by department and role with confidence levels',
-      metrics: [
-        { name: 'Total Predicted Hires (12M)', value: 275, unit: 'employees' },
-        { name: 'Average Monthly Hires', value: 23, unit: 'employees' },
-        { name: 'Critical Roles at Risk', value: 12, unit: 'roles' },
-        { name: 'Average Confidence Level', value: 89, unit: '%' },
-      ],
-    },
-    {
-      id: 'comprehensive',
-      name: 'Comprehensive HR Report',
-      description: 'Complete overview of all HR metrics and analytics',
-      metrics: [
-        { name: 'Total Headcount', value: 12000, unit: 'employees' },
-        { name: 'Average Performance Score', value: 79, unit: 'points' },
-        { name: 'Turnover Rate', value: 2.3, unit: '%' },
-        { name: 'Predicted Hires (12M)', value: 275, unit: 'employees' },
-      ],
-    },
-    {
-      id: 'executive',
-      name: 'Executive Summary',
-      description: 'High-level overview for leadership and executives',
-      metrics: [
-        { name: 'Total Headcount', value: 12000, unit: 'employees' },
-        { name: 'Headcount Growth', value: 2.5, unit: '%' },
-        { name: 'Turnover Rate', value: 2.3, unit: '%' },
-        { name: 'Average Performance', value: 79, unit: 'points' },
-      ],
-    },
-  ]);
+  reportTemplates = signal<ReportTemplate[]>([]);
 
   recentReports = signal([
     { name: 'Performance Analytics Report', date: '2024-01-15', status: 'completed' },
     { name: 'Workforce Metrics Report', date: '2024-01-14', status: 'completed' },
     { name: 'Turnover Analysis Report', date: '2024-01-13', status: 'completed' },
   ]);
-
-  constructor(private reportService: ReportService) {}
 
   ngOnInit(): void {
     // Initialize with default date range (last 30 days)
@@ -349,6 +292,22 @@ export class ReportsComponent implements OnInit {
 
     this.endDate = today.toISOString().split('T')[0];
     this.startDate = thirtyDaysAgo.toISOString().split('T')[0];
+
+    this.loadTemplates();
+  }
+
+  private loadTemplates(): void {
+    this.isLoading.set(true);
+    this.dataService.getReportTemplates().subscribe({
+      next: (templates) => {
+        this.reportTemplates.set(templates);
+        this.isLoading.set(false);
+      },
+      error: (err) => {
+        console.error('Error loading report templates:', err);
+        this.isLoading.set(false);
+      }
+    });
   }
 
   onTemplateChange(): void {
@@ -361,6 +320,7 @@ export class ReportsComponent implements OnInit {
   selectTemplate(template: ReportTemplate): void {
     this.selectedTemplate = template.id;
     this.reportTitle = template.name;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   exportReport(format: 'pdf' | 'csv' | 'excel'): void {

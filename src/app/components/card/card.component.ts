@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, AfterContentInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 /**
@@ -30,17 +30,17 @@ import { CommonModule } from '@angular/common';
     </div>
   `,
 })
-export class CardComponent {
+export class CardComponent implements AfterContentInit {
   hasHeader = false;
   hasFooter = false;
 
-  constructor() {
-    // Check if header/footer content is provided
+  constructor(private el: ElementRef) {}
+
+  ngAfterContentInit() {
+    // Small delay to ensure content is rendered in JSDOM/Tests
     setTimeout(() => {
-      const header = document.querySelector('[appCardHeader]');
-      const footer = document.querySelector('[appCardFooter]');
-      this.hasHeader = !!header;
-      this.hasFooter = !!footer;
-    });
+      this.hasHeader = !!this.el.nativeElement.querySelector('[appCardHeader]');
+      this.hasFooter = !!this.el.nativeElement.querySelector('[appCardFooter]');
+    }, 0);
   }
 }

@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { jsPDF } from 'jspdf';
 import 'jspdf-autotable';
 import * as XLSX from 'xlsx';
+import * as ArabicReshaper from 'arabic-persian-reshaper';
+import { AMIRI_FONT_BASE64 } from '../assets/fonts/amiri-font';
 
 /**
  * Report Service
@@ -85,7 +87,7 @@ export class ReportService {
 
   constructor() {}
 
-  /**
+   /**
    * Generate PDF report
    */
   generatePDF(config: ReportConfig): void {
@@ -95,67 +97,99 @@ export class ReportService {
       format: 'a4',
     });
 
+    const isAr = config.language === 'ar';
     const t = this.translations[config.language];
+    
+    // Setup font for Arabic
+    if (isAr) {
+      doc.addFileToVFS('Amiri-Regular.ttf', AMIRI_FONT_BASE64);
+      doc.addFont('Amiri-Regular.ttf', 'Amiri', 'normal');
+      doc.setFont('Amiri');
+    }
+
     const pageWidth = doc.internal.pageSize.getWidth();
     const margin = 15;
     let yPosition = margin;
 
     // Title
     doc.setFontSize(20);
-    doc.setFont('helvetica', 'bold');
-    doc.text(config.title, pageWidth / 2, yPosition, { align: 'center' });
+    if (!isAr) doc.setFont('helvetica', 'bold');
+    
+    const title = isAr ? this.prepareArabicText(config.title) : config.title;
+    doc.text(title, pageWidth / 2, yPosition, { align: 'center' });
     yPosition += 10;
 
     // Subtitle
     if (config.subtitle) {
       doc.setFontSize(12);
-      doc.setFont('helvetica', 'normal');
-      doc.text(config.subtitle, pageWidth / 2, yPosition, { align: 'center' });
+      if (!isAr) doc.setFont('helvetica', 'normal');
+      
+      const subtitle = isAr ? this.prepareArabicText(config.subtitle) : config.subtitle;
+      doc.text(subtitle, pageWidth / 2, yPosition, { align: 'center' });
       yPosition += 8;
     }
 
     // Generated date
     doc.setFontSize(10);
-    doc.setFont('helvetica', 'italic');
-    const generatedDate = new Date().toLocaleDateString(
-      config.language === 'ar' ? 'ar-SA' : 'en-US',
+    if (!isAr) doc.setFont('helvetica', 'italic');
+    
+    const generatedDateStr = new Date().toLocaleDateString(
+      isAr ? 'ar-SA' : 'en-US',
     );
-    doc.text(`${t.generatedOn}: ${generatedDate}`, margin, yPosition);
+    const dateText = isAr 
+      ? this.prepareArabicText(`${t.generatedOn}: ${generatedDateStr}`)
+      : `${t.generatedOn}: ${generatedDateStr}`;
+      
+    doc.text(dateText, isAr ? pageWidth - margin : margin, yPosition, { align: isAr ? 'right' : 'left' });
     yPosition += 8;
 
     // Date range
-    doc.setFont('helvetica', 'normal');
+    if (!isAr) doc.setFont('helvetica', 'normal');
     const startDate = config.dateRange.startDate.toLocaleDateString(
-      config.language === 'ar' ? 'ar-SA' : 'en-US',
+      isAr ? 'ar-SA' : 'en-US',
     );
     const endDate = config.dateRange.endDate.toLocaleDateString(
-      config.language === 'ar' ? 'ar-SA' : 'en-US',
+      isAr ? 'ar-SA' : 'en-US',
     );
-    doc.text(`${t.dateRange}: ${t.from} ${startDate} ${t.to} ${endDate}`, margin, yPosition);
+    
+    const rangeText = isAr
+      ? this.prepareArabicText(`${t.dateRange}: ${t.from} ${startDate} ${t.to} ${endDate}`)
+      : `${t.dateRange}: ${t.from} ${startDate} ${t.to} ${endDate}`;
+      
+    doc.text(rangeText, isAr ? pageWidth - margin : margin, yPosition, { align: isAr ? 'right' : 'left' });
     yPosition += 12;
 
     // Metrics section
     doc.setFontSize(14);
-    doc.setFont('helvetica', 'bold');
-    doc.text(t.metrics, margin, yPosition);
+    if (!isAr) doc.setFont('helvetica', 'bold');
+    doc.text(isAr ? this.prepareArabicText(t.metrics) : t.metrics, isAr ? pageWidth - margin : margin, yPosition, { align: isAr ? 'right' : 'left' });
     yPosition += 8;
 
     // Metrics table
     doc.setFontSize(10);
-    doc.setFont('helvetica', 'normal');
+    if (!isAr) doc.setFont('helvetica', 'normal');
 
-    const tableData = config.metrics.map((metric) => [
+    let tableHead = [t.metric, t.value, t.unit, t.description];
+    let tableData = config.metrics.map((metric) => [
       metric.name,
       String(metric.value),
       metric.unit || '',
       metric.description || '',
     ]);
 
+    if (isAr) {
+      // Reshape Arabic text in table
+      tableHead = tableHead.map(text => this.prepareArabicText(text)).reverse();
+      tableData = tableData.map(row => row.map(cell => this.prepareArabicText(String(cell))).reverse());
+    }
+
     (doc as any).autoTable({
-      head: [[t.metric, t.value, t.unit, t.description]],
+      head: [tableHead],
       body: tableData,
       startY: yPosition,
       margin: margin,
+      styles: isAr ? { font: 'Amiri', halign: 'right' } : {},
+      headStyles: isAr ? { halign: 'right' } : {},
       didDrawPage: (data: any) => {
         // Footer
         const pageCount = (doc as any).internal.getNumberOfPages();
@@ -164,8 +198,12 @@ export class ReportService {
         const footerY = pageHeight - 10;
 
         doc.setFontSize(9);
+        const footerText = isAr
+          ? this.prepareArabicText(`${t.page} ${data.pageNumber} ${t.of} ${pageCount}`)
+          : `${t.page} ${data.pageNumber} ${t.of} ${pageCount}`;
+          
         doc.text(
-          `${t.page} ${data.pageNumber} ${t.of} ${pageCount}`,
+          footerText,
           pageSize.getWidth() / 2,
           footerY,
           { align: 'center' },
@@ -178,20 +216,28 @@ export class ReportService {
       yPosition = (doc as any).lastAutoTable.finalY + 12;
 
       doc.setFontSize(14);
-      doc.setFont('helvetica', 'bold');
-      doc.text(t.filters, margin, yPosition);
+      if (!isAr) doc.setFont('helvetica', 'bold');
+      doc.text(isAr ? this.prepareArabicText(t.filters) : t.filters, isAr ? pageWidth - margin : margin, yPosition, { align: isAr ? 'right' : 'left' });
       yPosition += 8;
 
       doc.setFontSize(10);
-      doc.setFont('helvetica', 'normal');
+      if (!isAr) doc.setFont('helvetica', 'normal');
 
-      const filterData = Object.entries(config.filters).map(([key, value]) => [key, String(value)]);
+      let filterHead = ['Filter', 'Value'];
+      let filterData = Object.entries(config.filters).map(([key, value]) => [key, String(value)]);
+      
+      if (isAr) {
+        filterHead = filterHead.map(text => this.prepareArabicText(text)).reverse();
+        filterData = filterData.map(row => row.map(cell => this.prepareArabicText(String(cell))).reverse());
+      }
 
       (doc as any).autoTable({
-        head: [['Filter', 'Value']],
+        head: [filterHead],
         body: filterData,
         startY: yPosition,
         margin: margin,
+        styles: isAr ? { font: 'Amiri', halign: 'right' } : {},
+        headStyles: isAr ? { halign: 'right' } : {},
       });
     }
 
@@ -360,5 +406,17 @@ export class ReportService {
       { id: 'en', label: 'English' },
       { id: 'ar', label: 'العربية' },
     ];
+  }
+
+  /**
+   * Helper to prepare Arabic text for jsPDF
+   * Reshapes and reverses the text for RTL support
+   */
+  private prepareArabicText(text: string): string {
+    if (!text) return '';
+    // Reshape text
+    const reshaped = (ArabicReshaper as any).ArabicShaper.reshape(text);
+    // Reverse text for LTR rendering in jsPDF
+    return reshaped.split('').reverse().join('');
   }
 }

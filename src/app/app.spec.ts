@@ -1,10 +1,15 @@
 import { TestBed } from '@angular/core/testing';
 import { App } from './app';
+import { I18nService, ThemeService } from './services';
 
 describe('App', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [App],
+      providers: [
+        { provide: I18nService, useValue: { language: () => 'en', isRTL: () => false } },
+        { provide: ThemeService, useValue: { theme: () => 'light', isDarkMode: () => false } }
+      ]
     }).compileComponents();
   });
 

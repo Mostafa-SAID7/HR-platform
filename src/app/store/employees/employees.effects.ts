@@ -3,16 +3,18 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { of } from 'rxjs';
 import { catchError, map, switchMap, retry } from 'rxjs/operators';
 import * as EmployeeActions from './employees.actions';
+import { DataService } from '../../services/data.service';
 
 @Injectable()
 export class EmployeeEffects {
   private actions$ = inject(Actions);
+  private dataService = inject(DataService);
 
   readonly loadEmployees$ = createEffect(() =>
     this.actions$.pipe(
       ofType(EmployeeActions.loadEmployees),
       switchMap(() =>
-        of([]).pipe(
+        this.dataService.getEmployees().pipe(
           retry(3),
           map((employees) => EmployeeActions.loadEmployeesSuccess({ employees })),
           catchError((error) =>
@@ -22,7 +24,7 @@ export class EmployeeEffects {
               }),
             ),
           ),
-        ),
+        )
       ),
     ),
   );
