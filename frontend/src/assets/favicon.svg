@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#3b82f6"/>
+      <stop offset="100%" stop-color="#1d4ed8"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Rounded square background -->
+  <rect width="32" height="32" rx="7" fill="url(#bg)"/>
+
+  <!-- Person: head -->
+  <circle cx="11" cy="10" r="3" fill="#ffffff"/>
+  <!-- Person: shoulders arc -->
+  <path d="M6 19c0-2.8 2.2-5 5-5s5 2.2 5 5" stroke="#ffffff" stroke-width="1.8"
+        stroke-linecap="round" fill="none"/>
+
+  <!-- Thin vertical divider -->
+  <line x1="17.5" y1="7" x2="17.5" y2="25" stroke="#ffffff" stroke-width="0.7" stroke-opacity="0.25"/>
+
+  <!-- Bar chart: 3 bars right side -->
+  <rect x="19.5" y="14" width="3" height="9"  rx="1" fill="#93c5fd"/>
+  <rect x="24"   y="10" width="3" height="13" rx="1" fill="#ffffff"/>
+  <rect x="28.5" y="17" width="2.5" height="6" rx="1" fill="#93c5fd"/>
+</svg>

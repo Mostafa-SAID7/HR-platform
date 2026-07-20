@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180" fill="none">
+  <defs>
+    <linearGradient id="bgApple" x1="0" y1="0" x2="180" y2="180" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#3b82f6"/>
+      <stop offset="100%" stop-color="#1d4ed8"/>
+    </linearGradient>
+    <linearGradient id="shineApple" x1="0" y1="0" x2="0" y2="1" gradientUnits="objectBoundingBox">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.10"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+
+  <!-- iOS requires no rounded corners — system clips it -->
+  <rect width="180" height="180" fill="url(#bgApple)"/>
+  <!-- Subtle inner shine -->
+  <rect width="180" height="90" fill="url(#shineApple)"/>
+
+  <!-- Left half: Person -->
+  <circle cx="58" cy="52" r="17" fill="#ffffff"/>
+  <path d="M28 96c0-16.6 13.4-30 30-30s30 13.4 30 30"
+        stroke="#ffffff" stroke-width="6.5" stroke-linecap="round" fill="none"/>
+
+  <!-- Vertical divider -->
+  <line x1="97" y1="26" x2="97" y2="154" stroke="#ffffff" stroke-width="1.8" stroke-opacity="0.18"/>
+
+  <!-- Right half: Bar chart -->
+  <rect x="102" y="70"  width="16" height="62" rx="5" fill="#93c5fd"/>
+  <rect x="124" y="52"  width="16" height="80" rx="5" fill="#ffffff"/>
+  <rect x="146" y="86"  width="16" height="46" rx="5" fill="#93c5fd"/>
+
+  <!-- Trend line -->
+  <polyline points="110,106 132,76 154,100"
+            stroke="#dbeafe" stroke-width="3.5"
+            stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <circle cx="110" cy="106" r="5" fill="#bfdbfe"/>
+  <circle cx="132" cy="76"  r="5" fill="#bfdbfe"/>
+  <circle cx="154" cy="100" r="5" fill="#bfdbfe"/>
+
+  <!-- Bottom accent strip -->
+  <rect x="28" y="140" width="124" height="5" rx="2.5" fill="#ffffff" fill-opacity="0.14"/>
+</svg>
