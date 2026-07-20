@@ -2,45 +2,82 @@
 :host { display: block; height: 100%; }
 
 /* ════════════════════════════════════════════
-   Sidebar — responsive layout + slide animation
-   (Can't fully express this in Angular class bindings
-    because responsive variants need CSS media queries)
+   Sidebar base — shared across all breakpoints
    ════════════════════════════════════════════ */
 .sidebar {
-  width: 240px;
+  /* Sidebar is a vertical flex column so flex-1 children push the
+     system section and user card to the bottom correctly */
+  display: flex;
+  flex-direction: column;
   flex-shrink: 0;
+  /* Height is naturally 100% of the parent flex row minus margins */
+  min-height: 0;
   overflow-y: auto;
   overflow-x: hidden;
   z-index: 100;
-  transition: width 200ms cubic-bezier(0.4,0,0.2,1),
-              transform 300ms cubic-bezier(0.4,0,0.2,1);
+  transition:
+    width     200ms cubic-bezier(0.4, 0, 0.2, 1),
+    transform 300ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Desktop (≥1024px): Full 240px sidebar, always visible */
+/* ── Desktop (≥1024px): fully floating card, all corners rounded ── */
 @media (min-width: 1024px) {
   .sidebar {
     width: 240px;
     position: static;
     transform: none !important;
-    margin: 12px 0 12px 12px;
-    border-radius: 0 12px 12px 0;
+    /* Small end margin so the gap to the header/content is tight */
+    margin: 12px 4px 12px 12px;
+    margin-inline: 12px 4px;
+    border-radius: 12px;
   }
+
+  /* Collapsed → icon-only 70px, still floating */
+  .sidebar.sidebar-desktop-collapsed {
+    width: 70px;
+  }
+
+  /* Hide text layers when collapsed */
+  .sidebar.sidebar-desktop-collapsed .sidebar-brand-text,
+  .sidebar.sidebar-desktop-collapsed .sidebar-section-label,
+  .sidebar.sidebar-desktop-collapsed .sidebar-user-text,
+  .sidebar.sidebar-desktop-collapsed .nav-label,
+  .sidebar.sidebar-desktop-collapsed .sidebar-footer-label {
+    display: none !important;
+  }
+
+  /* Center icons, strip gap when collapsed */
+  .sidebar.sidebar-desktop-collapsed .nav-item,
+  .sidebar.sidebar-desktop-collapsed .sidebar-footer-btn {
+    justify-content: center !important;
+    padding: 12px !important;
+    gap: 0 !important;
+  }
+  .sidebar.sidebar-desktop-collapsed .sidebar-user-card {
+    justify-content: center !important;
+    padding-inline: 0.5rem !important;
+  }
+
   .sidebar-close-btn-mobile { display: none !important; }
 }
 
-/* Tablet (768–1023px): Icon-only 70px sidebar, always visible */
+/* ── Tablet (768–1023px): icon-only, fully floating card ── */
 @media (min-width: 768px) and (max-width: 1023px) {
   .sidebar {
     width: 70px;
     position: static;
     transform: none !important;
-    margin: 12px 0 12px 12px;
-    border-radius: 0 12px 12px 0;
+    margin: 12px 4px 12px 12px;
+    margin-inline: 12px 4px;
+    border-radius: 12px;
   }
   .sidebar-close-btn-mobile { display: none !important; }
 }
 
-/* Mobile (<768px): Fixed overlay that slides in/out */
+/* ── Mobile (<768px): overlay from the start edge of the screen.
+      Start side is flush with the screen edge → flat corners there.
+      End side faces the content → 12px rounded.
+      Uses logical properties so RTL auto-flips correctly. ── */
 @media (max-width: 767px) {
   .sidebar {
     position: fixed;
@@ -48,44 +85,49 @@
     inset-inline-start: 0;
     height: 100vh;
     width: 240px;
-    border-radius: 0 12px 12px 0;
     margin: 0;
+    /* Start side flat (against screen edge), end side rounded */
+    border-start-start-radius: 0;
+    border-end-start-radius:   0;
+    border-start-end-radius:   14px;
+    border-end-end-radius:     14px;
   }
-  /* LTR closed */
   .sidebar-closed-ltr { transform: translateX(-100%); }
-  /* RTL closed */
-  .sidebar-closed-rtl { transform: translateX(100%); }
-  /* Open */
-  .sidebar-open { transform: translateX(0); }
+  .sidebar-closed-rtl { transform: translateX(100%);  }
+  .sidebar-open        { transform: translateX(0);    }
 }
 
-/* ── Nav item base color (overrides global <a> link color) ─── */
+/* ════════════════════════════════════════════
+   Nav items
+   ════════════════════════════════════════════ */
 .nav-item {
   color: var(--sidebar-text);
   text-decoration: none;
 }
-.nav-item:hover { color: rgba(255,255,255,0.85); }
+.nav-item:hover { color: rgba(255, 255, 255, 0.85); }
 
-/* ── Nav active state ─────────────────────── */
+/* ── Active state ── */
 .nav-active {
   background: rgba(79, 110, 247, 0.18) !important;
   color: #fff !important;
 }
 .nav-active .nav-icon { color: var(--sidebar-accent) !important; }
 
-/* Active pip indicator */
+/* ── Active pip: sits INSIDE the nav item at the start edge.
+      Uses inset-inline-start: 0 so it stays within bounds
+      (never clipped by overflow-x: hidden) and flips
+      automatically in RTL. ── */
 .nav-active .nav-pip {
   opacity: 1;
   position: absolute;
-  inset-block: 0;
-  inset-inline-start: -10px;
+  inset-block: 4px;         /* small vertical inset so it doesn't bleed to corners */
+  inset-inline-start: 0;    /* flush with inner start edge of the nav item */
   width: 3px;
   background: var(--sidebar-accent);
-  border-radius: 0 2px 2px 0;
+  border-radius: 0 2px 2px 0;  /* rounded on the end/content side */
 }
 
-/* Tablet: hide text, center icons */
-@media (min-width: 768px) and (max-width: 1023px) {
-  .sidebar-text-hide { display: none !important; }
-  .sidebar-icon-center { justify-content: center !important; padding: 12px !important; }
+/* In RTL the pip is on the right (start = right), round the left side instead */
+[dir="rtl"] .nav-active .nav-pip {
+  border-radius: 2px 0 0 2px;
 }

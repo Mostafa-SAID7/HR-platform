@@ -127,6 +127,11 @@
   --surface-border:  rgba(255,255,255,0.07);
   --surface-divider: rgba(255,255,255,0.05);
 
+  /* Sidebar shifts slightly lighter so it reads as distinct from the page */
+  --sidebar-bg:      #181d28;
+  --sidebar-border:  rgba(255,255,255,0.09);
+  --sidebar-text:    #8a97ae;
+
   --gray-25:   #161b25;
   --gray-50:   #1a2130;
   --gray-100:  #1f2937;

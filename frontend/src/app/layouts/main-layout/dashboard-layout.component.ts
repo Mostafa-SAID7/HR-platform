@@ -117,7 +117,12 @@ export class DashboardLayoutComponent implements OnInit, OnDestroy, AfterViewIni
       const navItem = item as HTMLElement;
       
       navItem.addEventListener('mouseenter', (e: Event) => {
-        if (window.innerWidth >= 1024) return; // Only on mid/small screens
+        // Show tooltip only when sidebar is in icon-only mode:
+        // tablet (768–1023px) OR desktop collapsed
+        const isIconOnly =
+          (window.innerWidth >= 768 && window.innerWidth < 1024) ||
+          (window.innerWidth >= 1024 && this.isSidebarCollapsed());
+        if (!isIconOnly) return;
         
         const target = e.target as HTMLElement;
         const closestNavItem = target.closest('.nav-item') as HTMLElement;
@@ -187,10 +192,16 @@ export class DashboardLayoutComponent implements OnInit, OnDestroy, AfterViewIni
   }
 
   /**
-   * Toggle sidebar open/close
+   * Toggle sidebar:
+   * - Desktop (≥1024px): collapse/expand between full and icon-only
+   * - Mobile/tablet (<1024px): open/close the overlay drawer
    */
   public toggleSidebar(): void {
-    this.isSidebarOpen.update(state => !state);
+    if (window.innerWidth >= 1024) {
+      this.isSidebarCollapsed.update(v => !v);
+    } else {
+      this.isSidebarOpen.update(state => !state);
+    }
   }
 
   /**
