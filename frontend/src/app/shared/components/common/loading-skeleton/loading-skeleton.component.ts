@@ -1,8 +1,10 @@
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-loading-skeleton',
   standalone: true,
+  imports: [CommonModule],
   templateUrl: './loading-skeleton.component.html',
   styles: [`
     .skeleton {

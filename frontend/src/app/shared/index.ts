@@ -22,7 +22,8 @@
 
 export * from './components/ui/index';
 export * from './components/common/index';
-export * from './components/layout/index';
+// Layout components are in app/layouts, not in shared
+// export * from './components/layout/index';
 export * from './components/index'; // Component groups and all exports
 
 // ============================================

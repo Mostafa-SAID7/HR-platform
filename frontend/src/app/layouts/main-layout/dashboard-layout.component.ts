@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, signal, inject, computed } from '@angular/core';
-import { CommonModule, NgClass, NgFor, NgIf, AsyncPipe } from '@angular/common';
+import { CommonModule, NgClass, NgFor, NgIf } from '@angular/common';
 import { RouterOutlet, RouterModule, Router, NavigationEnd } from '@angular/router';
-import { ButtonComponent, ConnectionStatusComponent, BreadcrumbComponent } from '../../shared/components';
+import { ConnectionStatusComponent } from '../../shared/components';
 import { I18nService, ThemeService, AuthService } from '../../core';
 import { filter, Subscription } from 'rxjs';
 import { routeAnimation, fadeIn } from '../../shared/animations';
@@ -39,12 +39,9 @@ interface User {
     NgClass,
     NgFor,
     NgIf,
-    AsyncPipe,
     RouterOutlet,
     RouterModule,
-    ButtonComponent,
     ConnectionStatusComponent,
-    BreadcrumbComponent,
   ],
   animations: [routeAnimation, fadeIn],
   templateUrl: './dashboard-layout.component.html',

@@ -119,22 +119,23 @@ export const routes: Routes = [
    * Routes for login, signup, password reset
    * Uses minimal auth layout without navigation
    */
-  {
-    path: 'auth',
-    loadComponent: () => Promise.resolve(AuthLayoutComponent),
-    children: [
-      // TODO: Add login, signup, password-reset routes here
-      // Example:
-      // {
-      //   path: 'login',
-      //   loadComponent: () => import('./pages/login/login.component').then(m => m.LoginComponent)
-      // },
-      // {
-      //   path: 'signup',
-      //   loadComponent: () => import('./pages/signup/signup.component').then(m => m.SignupComponent)
-      // }
-    ],
-  },
+  // TODO: Create auth layout and routes
+  // {
+  //   path: 'auth',
+  //   loadComponent: () => import('./layouts/main-layout/auth-layout/auth-layout.component').then(m => m.AuthLayoutComponent),
+  //   children: [
+  //     // TODO: Add login, signup, password-reset routes here
+  //     // Example:
+  //     // {
+  //     //   path: 'login',
+  //     //   loadComponent: () => import('./pages/login/login.component').then(m => m.LoginComponent)
+  //     // },
+  //     // {
+  //     //   path: 'signup',
+  //     //   loadComponent: () => import('./pages/signup/signup.component').then(m => m.SignupComponent)
+  //     // }
+  //   ],
+  // },
 
   /**
    * Error Pages
