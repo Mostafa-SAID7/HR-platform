@@ -8,6 +8,11 @@ import { authGuard, authorizationGuard } from '../../core';
 
 export const RECRUITMENT_ROUTES: Routes = [
   {
+    path: '',
+    redirectTo: 'hiring',
+    pathMatch: 'full',
+  },
+  {
     path: 'hiring',
     loadComponent: () =>
       import('./pages/hiring/hiring.component').then((m) => m.HiringComponent),

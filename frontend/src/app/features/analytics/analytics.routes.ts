@@ -8,6 +8,11 @@ import { authGuard, authorizationGuard } from '../../core';
 
 export const ANALYTICS_ROUTES: Routes = [
   {
+    path: '',
+    redirectTo: 'workforce',
+    pathMatch: 'full',
+  },
+  {
     path: 'reports',
     loadComponent: () =>
       import('./pages/reports/reports.component').then((m) => m.ReportsComponent),
