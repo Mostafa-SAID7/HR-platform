@@ -1,0 +1,45 @@
+<!-- Print Layout Container -->
+<div class="min-h-screen bg-white print:bg-white" [dir]="i18nService.isArabic() ? 'rtl' : 'ltr'">
+  
+  <!-- Print Controls (Hidden on Print) -->
+  <div class="no-print sticky top-0 z-50 bg-white border-b border-slate-200 shadow-sm">
+    <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
+      <div>
+        <h2 class="text-lg font-bold text-slate-900">Print Preview</h2>
+        <p class="text-sm text-slate-500">Prepare your document for printing</p>
+      </div>
+      
+      <div class="flex items-center gap-3">
+        <button
+          (click)="printPage()"
+          class="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-all font-medium"
+        >
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4H9a2 2 0 00-2 2v2a2 2 0 002 2h4a2 2 0 002-2v-2a2 2 0 00-2-2zm0 0h4a2 2 0 002-2v-4a2 2 0 00-2-2h-2.5"></path>
+          </svg>
+          Print
+        </button>
+
+        <button
+          (click)="goBack()"
+          class="flex items-center gap-2 px-4 py-2 bg-slate-200 text-slate-900 rounded-lg hover:bg-slate-300 transition-all font-medium"
+        >
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+          </svg>
+          Back
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Print Content -->
+  <main class="max-w-6xl mx-auto px-4 py-8 print:px-0 print:py-0">
+    <router-outlet></router-outlet>
+  </main>
+
+  <!-- Print Footer (Hidden on Print) -->
+  <div class="no-print border-t border-slate-200 mt-12 py-6 text-center text-sm text-slate-500">
+    <p>This is a print preview. Click the Print button above to proceed.</p>
+  </div>
+</div>

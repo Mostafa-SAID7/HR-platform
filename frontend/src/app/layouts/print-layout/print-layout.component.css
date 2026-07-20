@@ -1,0 +1,23 @@
+:host {
+  display: block;
+}
+
+@media print {
+  :host {
+    background: white;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+
+  :host ::ng-deep * {
+    background: transparent !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+
+  :host ::ng-deep main {
+    padding: 0 !important;
+  }
+}

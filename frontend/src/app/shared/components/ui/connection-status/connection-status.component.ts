@@ -1,0 +1,77 @@
+import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { WebSocketService } from '@app/core';
+
+/**
+ * Connection Status Indicator Component
+ *
+ * Displays the current WebSocket connection status.
+ * Shows visual indicators for connected, disconnected, and reconnecting states.
+ *
+ * Requirements: 5.3, 5.4
+ */
+@Component({
+  selector: 'app-connection-status',
+  standalone: true,
+  imports: [CommonModule],
+  templateUrl: './connection-status.component.html',
+})
+export class ConnectionStatusComponent implements OnInit {
+  connectionStatus$: any;
+
+  constructor(private wsService: WebSocketService) {
+    this.connectionStatus$ = this.wsService.connectionStatus$;
+  }
+
+  ngOnInit(): void {
+    // Component initialized
+  }
+
+  getStatusText(): string {
+    const status = this.wsService.getConnectionStatus();
+    switch (status) {
+      case 'connected':
+        return 'Connected';
+      case 'mocked':
+        return 'Mock Mode';
+      case 'disconnected':
+        return 'Disconnected';
+      case 'reconnecting':
+        return 'Reconnecting...';
+      default:
+        return 'Unknown';
+    }
+  }
+
+  getStatusClasses(): string {
+    const status = this.wsService.getConnectionStatus();
+    switch (status) {
+      case 'connected':
+        return 'bg-emerald-100 text-emerald-800 dark:bg-emerald-500/20 dark:text-emerald-300 shadow-sm';
+      case 'mocked':
+        return 'bg-indigo-100 text-indigo-800 dark:bg-indigo-500/20 dark:text-indigo-300 shadow-sm border border-indigo-200 dark:border-indigo-800/50';
+      case 'disconnected':
+        return 'bg-red-100 text-red-800 dark:bg-red-500/20 dark:text-red-400';
+      case 'reconnecting':
+        return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-500/20 dark:text-yellow-300';
+      default:
+        return 'bg-slate-100 text-slate-800 dark:bg-slate-500/20 dark:text-slate-300';
+    }
+  }
+
+  getIndicatorClasses(): string {
+    const status = this.wsService.getConnectionStatus();
+    switch (status) {
+      case 'connected':
+        return 'bg-emerald-600 dark:bg-emerald-400';
+      case 'mocked':
+        return 'bg-indigo-600 dark:bg-indigo-400 animate-pulse';
+      case 'disconnected':
+        return 'bg-red-600 dark:bg-red-400';
+      case 'reconnecting':
+        return 'bg-yellow-600 dark:bg-yellow-400 animate-pulse';
+      default:
+        return 'bg-slate-600 dark:bg-slate-400';
+    }
+  }
+}
