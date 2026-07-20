@@ -10,12 +10,12 @@
     [attr.aria-label]="ariaLabel || label"
     [attr.aria-checked]="state() === 'indeterminate' ? 'mixed' : state() === 'checked'"
     [attr.aria-disabled]="disabled"
-    class="w-4 h-4 rounded border-slate-300 dark:border-slate-600 text-indigo-600 dark:text-indigo-500 focus:ring-indigo-500 dark:focus:ring-indigo-400 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+    class="w-4 h-4 rounded border-gray-300 dark:border-gray-600 text-primary-hover dark:text-primary focus:ring-primary dark:focus:ring-primary-light cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
   />
   <label
     *ngIf="label"
     [for]="id"
-    class="ml-2 text-sm font-medium text-slate-700 dark:text-slate-300 cursor-pointer select-none"
+    class="ml-2 text-sm font-medium text-gray-700 dark:text-gray-300 cursor-pointer select-none"
   >
     {{ label }}
   </label>

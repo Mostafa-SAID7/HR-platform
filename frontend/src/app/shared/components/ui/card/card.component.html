@@ -1,11 +1,11 @@
 <div 
   [@slideInUp]
-  class="bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm rounded-2xl shadow-sm border border-slate-200/60 dark:border-slate-700/50 overflow-hidden transition-all duration-300 hover:shadow-xl hover:shadow-indigo-500/5 hover:border-indigo-500/20 group"
+  class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl shadow-sm border border-gray-200/60 dark:border-gray-700/50 overflow-hidden transition-all duration-300 hover:shadow-xl hover:shadow-primary/5 hover:border-primary/20 group"
 >
   <!-- Header -->
   <div 
     *ngIf="hasHeader" 
-    class="border-b border-slate-100 dark:border-slate-700/50 px-6 py-5 bg-slate-50/50 dark:bg-slate-900/20 group-hover:bg-indigo-50/30 dark:group-hover:bg-indigo-900/10 transition-colors"
+    class="border-b border-gray-100 dark:border-gray-700/50 px-6 py-5 bg-gray-50/50 dark:bg-gray-900/20 group-hover:bg-primary-muted/30 dark:group-hover:bg-primary-dark/10 transition-colors"
   >
     <ng-content select="[appCardHeader]"></ng-content>
   </div>
@@ -18,7 +18,7 @@
   <!-- Footer -->
   <div
     *ngIf="hasFooter"
-    class="border-t border-slate-100 dark:border-slate-700/50 px-6 py-4 bg-slate-50/30 dark:bg-slate-900/30"
+    class="border-t border-gray-100 dark:border-gray-700/50 px-6 py-4 bg-gray-50/30 dark:bg-gray-900/30"
   >
     <ng-content select="[appCardFooter]"></ng-content>
   </div>

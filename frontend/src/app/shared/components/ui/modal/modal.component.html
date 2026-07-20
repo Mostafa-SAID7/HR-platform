@@ -14,7 +14,7 @@
   <!-- Modal Dialog -->
   <div
     #modalDialog
-    class="relative bg-white dark:bg-slate-800 rounded-lg shadow-2xl dark:shadow-2xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-hidden flex flex-col animate-in fade-in zoom-in-95 duration-300"
+    class="relative bg-white dark:bg-gray-800 rounded-lg shadow-2xl dark:shadow-2xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-hidden flex flex-col animate-in fade-in zoom-in-95 duration-300"
     role="dialog"
     [attr.aria-modal]="true"
     [attr.aria-labelledby]="titleId"
@@ -25,15 +25,15 @@
     <!-- Header -->
     <div
       *ngIf="title || hasHeader"
-      class="border-b border-slate-200 dark:border-slate-700 px-6 py-4 flex items-center justify-between"
+      class="border-b border-gray-200 dark:border-gray-700 px-6 py-4 flex items-center justify-between"
     >
-      <h2 [id]="titleId" class="text-xl font-semibold text-slate-900 dark:text-white">
+      <h2 [id]="titleId" class="text-xl font-semibold text-gray-900 dark:text-white">
         {{ title }}
       </h2>
       <button
         *ngIf="showCloseButton"
         (click)="close()"
-        class="text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 transition-colors"
+        class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors"
         aria-label="Close modal"
         type="button"
       >
@@ -52,7 +52,7 @@
     <!-- Body -->
     <div
       [id]="descriptionId"
-      class="flex-1 overflow-y-auto px-6 py-4 text-slate-700 dark:text-slate-300"
+      class="flex-1 overflow-y-auto px-6 py-4 text-gray-700 dark:text-gray-300"
     >
       <ng-content></ng-content>
     </div>
@@ -60,7 +60,7 @@
     <!-- Footer -->
     <div
       *ngIf="hasFooter || actions.length > 0"
-      class="border-t border-slate-200 dark:border-slate-700 px-6 py-4 bg-slate-50 dark:bg-slate-900 flex items-center justify-end gap-3"
+      class="border-t border-gray-200 dark:border-gray-700 px-6 py-4 bg-gray-50 dark:bg-gray-900 flex items-center justify-end gap-3"
     >
       <ng-content select="[appModalFooter]"></ng-content>
       <button

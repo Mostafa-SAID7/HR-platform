@@ -1,14 +1,14 @@
 <div class="w-full" [style.height]="config().height || '400px'">
   <div
     #chartContainer
-    class="w-full h-full rounded-lg bg-white dark:bg-slate-800 shadow-md dark:shadow-lg"
+    class="w-full h-full rounded-lg bg-white dark:bg-gray-800 shadow-md dark:shadow-lg"
     [attr.aria-label]="config().title || 'Chart'"
     role="img"
   ></div>
   <div
     *ngIf="config().loading"
-    class="absolute inset-0 flex items-center justify-center bg-white/50 dark:bg-slate-800/50 rounded-lg"
+    class="absolute inset-0 flex items-center justify-center bg-white/50 dark:bg-gray-800/50 rounded-lg"
   >
-    <div class="text-slate-600 dark:text-slate-400">Loading chart...</div>
+    <div class="text-gray-600 dark:text-gray-400">Loading chart...</div>
   </div>
 </div>

@@ -1,8 +1,1 @@
-:host {
-  display: block;
-  height: 100%;
-}
-
-cdk-virtual-scroll-viewport {
-  scrollbar-width: thin;
-}
+/* Styles handled by global design tokens in styles.css and Tailwind utilities */

@@ -13,7 +13,7 @@
   >
     <span class="sr-only">{{ label }}</span>
     <span
-      class="inline-block h-5 w-5 transform rounded-full bg-white dark:bg-slate-900 shadow-md transition-transform duration-200"
+      class="inline-block h-5 w-5 transform rounded-full bg-white dark:bg-gray-900 shadow-md transition-transform duration-200"
       [class.translate-x-5]="isOn()"
       [class.translate-x-0]="!isOn()"
     ></span>
@@ -21,7 +21,7 @@
   <label
     *ngIf="label"
     [for]="id"
-    class="text-sm font-medium text-slate-700 dark:text-slate-300 cursor-pointer select-none"
+    class="text-sm font-medium text-gray-700 dark:text-gray-300 cursor-pointer select-none"
   >
     {{ label }}
   </label>
