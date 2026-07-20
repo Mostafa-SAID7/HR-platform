@@ -4,14 +4,14 @@
       <a
         *ngIf="!last && item.route"
         [routerLink]="item.route"
-        class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 transition-colors"
+        class="text-primary-hover dark:text-primary-light hover:text-primary-dark dark:hover:text-primary-light transition-colors"
       >
         {{ item.label }}
       </a>
-      <span *ngIf="last" class="text-slate-900 dark:text-white font-medium">
+      <span *ngIf="last" class="text-gray-900 dark:text-white font-medium">
         {{ item.label }}
       </span>
-      <span *ngIf="!last" class="text-slate-400 dark:text-slate-600 mx-1">/</span>
+      <span *ngIf="!last" class="text-gray-400 dark:text-gray-600 mx-1">/</span>
     </li>
   </ol>
 </nav>

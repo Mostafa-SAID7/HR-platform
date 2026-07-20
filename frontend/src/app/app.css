@@ -1,56 +1,21 @@
-/* Application styles */
-
+/* Application root */
 :host {
   display: block;
   height: 100%;
 }
 
-/* Smooth transitions for theme changes */
-* {
-  @apply transition-colors duration-300;
+/* Smooth theme transitions */
+*, *::before, *::after {
+  transition-property: background-color, border-color, color;
+  transition-duration: 200ms;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Ensure proper text rendering */
-body {
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-/* Focus visible for accessibility */
-:focus-visible {
-  outline: 2px solid #4338ca;
-  outline-offset: 2px;
-}
-
-/* Scrollbar styling */
-::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-
-::-webkit-scrollbar-track {
-  background-color: #f1f5f9;
-}
-
+/* Scrollbar styling — uses design tokens */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb {
-  background-color: #cbd5e1;
-  border-radius: 9999px;
+  background: var(--gray-200);
+  border-radius: var(--radius-sm);
 }
-
-::-webkit-scrollbar-thumb:hover {
-  background-color: #94a3b8;
-}
-
-@media (prefers-color-scheme: dark) {
-  ::-webkit-scrollbar-track {
-    background-color: #1e293b;
-  }
-
-  ::-webkit-scrollbar-thumb {
-    background-color: #475569;
-  }
-
-  ::-webkit-scrollbar-thumb:hover {
-    background-color: #64748b;
-  }
-}
+::-webkit-scrollbar-thumb:hover { background: var(--gray-300); }

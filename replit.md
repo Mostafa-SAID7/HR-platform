@@ -1,36 +1,37 @@
 # HR Analytics Platform
 
-Enterprise-grade HR analytics platform built with Angular 21, NgRx, and real-time WebSocket support. Provides workforce analytics, performance management, and hiring forecasts.
+Enterprise-grade HR analytics platform built with Angular 21, NgRx, and real-time WebSocket support. Provides workforce analytics, performance management, hiring forecasts, and attendance tracking.
 
 ## Stack
 
-- **Frontend**: Angular 21, NgRx (state management), Tailwind CSS, ECharts
-- **Language**: TypeScript
+- **Framework**: Angular 21 (standalone components)
+- **State management**: NgRx (store, effects, entity)
+- **Styling**: Tailwind CSS
 - **Build tool**: Angular CLI / Vite
-- **Testing**: Vitest
+- **Language**: TypeScript
+
+## Project structure
+
+```
+frontend/   Angular application (all source code lives here)
+docs/       User, admin, and technical documentation
+```
 
 ## How to run
+
+The workflow `Start application` runs `cd frontend && npm start`, which starts the Angular dev server on port 5000.
 
 ```bash
 cd frontend && npm start
 ```
 
-The app serves on port 5000 (`http://0.0.0.0:5000`). The workflow "Start application" handles this automatically.
-
-## Project structure
-
-```
-frontend/        Angular application
-docs/            Full project documentation (API, architecture, user guide, etc.)
-.github/         CI/CD workflow configs
-Dockerfile       Container definition
-```
+The app is available at port 5000 in the Replit preview.
 
 ## Notes
 
-- The app shows a "Disconnected" WebSocket status indicator — it expects a backend WebSocket server on `ws://localhost:8080/` that is not included in this repo (frontend-only import).
-- Dependencies must be installed via `cd frontend && npm install` before the first run.
+- `caniuse-lite` is pinned to `1.0.30001579` — newer versions (≥ 1.0.30001580) removed the `dist/unpacker/agents` file that `browserslist` v4.28.6 requires. Do not upgrade `caniuse-lite` without also upgrading `browserslist` to a compatible version.
+- The app shows a "Disconnected" WebSocket indicator in the header — this is expected in the dev environment since no backend WebSocket server is running.
 
 ## User preferences
 
-<!-- Add any user preferences here -->
+<!-- Add user preferences here -->

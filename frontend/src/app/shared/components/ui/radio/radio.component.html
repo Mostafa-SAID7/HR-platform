@@ -1,5 +1,5 @@
 <fieldset class="space-y-3">
-  <legend *ngIf="label" class="text-sm font-medium text-slate-700 dark:text-slate-300 mb-3">
+  <legend *ngIf="label" class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
     {{ label }}
   </legend>
 
@@ -16,11 +16,11 @@
         [disabled]="disabled || (option.disabled ?? false)"
         [attr.aria-label]="option.label"
         [attr.aria-disabled]="disabled || (option.disabled ?? false)"
-        class="w-4 h-4 border-slate-300 dark:border-slate-600 text-indigo-600 dark:text-indigo-500 focus:ring-indigo-500 dark:focus:ring-indigo-400 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+        class="w-4 h-4 border-gray-300 dark:border-gray-600 text-primary-hover dark:text-primary focus:ring-primary dark:focus:ring-primary-light cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
       />
       <label
         [for]="id + '-' + idx"
-        class="ml-2 text-sm font-medium text-slate-700 dark:text-slate-300 cursor-pointer select-none"
+        class="ml-2 text-sm font-medium text-gray-700 dark:text-gray-300 cursor-pointer select-none"
         [class.opacity-50]="disabled || option.disabled"
         [class.cursor-not-allowed]="disabled || option.disabled"
       >

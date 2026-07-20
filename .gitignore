@@ -43,3 +43,4 @@ __screenshots__/
 .DS_Store
 Thumbs.db
 frontend/.angular/
+frontend/node_modules/
