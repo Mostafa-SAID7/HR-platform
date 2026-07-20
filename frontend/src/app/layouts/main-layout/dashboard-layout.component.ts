@@ -1,6 +1,7 @@
-import { Component, OnInit, OnDestroy, signal, inject, computed } from '@angular/core';
-import { CommonModule, NgClass, NgFor, NgIf } from '@angular/common';
+import { Component, OnInit, OnDestroy, signal, inject } from '@angular/core';
+import { CommonModule, NgFor, NgIf } from '@angular/common';
 import { RouterOutlet, RouterModule, Router, NavigationEnd } from '@angular/router';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { ConnectionStatusComponent } from '../../shared/components';
 import { I18nService, ThemeService, AuthService } from '../../core';
 import { filter, Subscription } from 'rxjs';
@@ -15,7 +16,7 @@ interface NavLink {
   path: string;
   label: string;
   labelKey: string;
-  icon?: string;
+  icon?: SafeHtml;
 }
 
 interface User {
@@ -36,7 +37,6 @@ interface User {
   standalone: true,
   imports: [
     CommonModule,
-    NgClass,
     NgFor,
     NgIf,
     RouterOutlet,
@@ -53,6 +53,9 @@ export class DashboardLayoutComponent implements OnInit, OnDestroy {
   public themeService = inject(ThemeService);
   private authService = inject(AuthService);
   private router = inject(Router);
+  private sanitizer = inject(DomSanitizer);
+
+  private svg(s: string): SafeHtml { return this.sanitizer.bypassSecurityTrustHtml(s); }
 
   // Signals
   public isSidebarOpen = signal(false);
@@ -61,19 +64,22 @@ export class DashboardLayoutComponent implements OnInit, OnDestroy {
   public breadcrumbItems = signal<BreadcrumbItemData[]>([]);
   public currentUser = signal<User | null>(null);
 
-  // Navigation Links
-  public navLinks: NavLink[] = [
-    { path: '/dashboard', label: 'Dashboard', labelKey: 'nav.dashboard' },
-    { path: '/employees', label: 'Employees', labelKey: 'nav.employees' },
-    { path: '/performance', label: 'Performance', labelKey: 'nav.performance' },
-    { path: '/recruitment', label: 'Recruitment', labelKey: 'nav.recruitment' },
-    { path: '/analytics', label: 'Analytics', labelKey: 'nav.analytics' },
-    { path: '/attendance', label: 'Attendance', labelKey: 'nav.attendance' },
-  ];
+  // Navigation Links with inline SVG icons (SafeHtml – assigned in constructor)
+  public navLinks: NavLink[] = [];
 
   private navigationSubscription: Subscription | null = null;
 
   ngOnInit(): void {
+    // Initialize nav links with trusted SVG icons
+    this.navLinks = [
+      { path: '/dashboard',   label: 'Dashboard',   labelKey: 'nav.dashboard',   icon: this.svg(`<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>`) },
+      { path: '/employees',   label: 'Employees',   labelKey: 'nav.employees',   icon: this.svg(`<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>`) },
+      { path: '/performance', label: 'Performance', labelKey: 'nav.performance', icon: this.svg(`<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>`) },
+      { path: '/recruitment', label: 'Recruitment', labelKey: 'nav.recruitment', icon: this.svg(`<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>`) },
+      { path: '/analytics',   label: 'Analytics',  labelKey: 'nav.analytics',   icon: this.svg(`<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>`) },
+      { path: '/attendance',  label: 'Attendance', labelKey: 'nav.attendance',  icon: this.svg(`<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><polyline points="9 16 11 18 15 14"/></svg>`) },
+    ];
+
     // Close sidebar on mobile on route change
     this.navigationSubscription = this.router.events
       .pipe(filter(event => event instanceof NavigationEnd))

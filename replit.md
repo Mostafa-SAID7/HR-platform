@@ -1,35 +1,36 @@
 # HR Analytics Platform
 
-Enterprise-grade HR analytics platform built with **Angular 21**, **NgRx**, **Tailwind CSS**, and real-time WebSocket support. Provides workforce analytics, performance management, and hiring forecasts.
+Enterprise-grade HR analytics platform built with Angular 21, NgRx, and real-time WebSocket support. Provides workforce analytics, performance management, and hiring forecasts.
+
+## Stack
+
+- **Frontend**: Angular 21, NgRx (state management), Tailwind CSS, ECharts
+- **Language**: TypeScript
+- **Build tool**: Angular CLI / Vite
+- **Testing**: Vitest
 
 ## How to run
-
-The app runs via the **Start application** workflow (or the Run button):
 
 ```bash
 cd frontend && npm start
 ```
 
-- Dev server starts on **port 5000** at `http://0.0.0.0:5000`
-- Angular CLI (`ng serve`) handles hot-reload automatically
+The app serves on port 5000 (`http://0.0.0.0:5000`). The workflow "Start application" handles this automatically.
 
 ## Project structure
 
 ```
-frontend/          Angular 21 SPA
-  src/
-    app/           Components, NgRx store, services, routing
-  angular.json     CLI config — host: 0.0.0.0, port: 5000
-  tailwind.config.ts
-docs/              User guide, admin guide, technical docs, FAQ
+frontend/        Angular application
+docs/            Full project documentation (API, architecture, user guide, etc.)
+.github/         CI/CD workflow configs
+Dockerfile       Container definition
 ```
 
-## Key notes
+## Notes
 
-- **Dependencies**: `frontend/node_modules/` — reinstall with `cd frontend && npm install` if needed
-- **WebSocket**: The app expects a WebSocket server at `ws://localhost:8080/` for real-time features. Without a backend running, the UI shows "Disconnected" — this is expected and non-fatal.
-- **Port**: Already configured to 5000 in `angular.json` (`serve › options › port`) — no changes needed for Replit.
+- The app shows a "Disconnected" WebSocket status indicator — it expects a backend WebSocket server on `ws://localhost:8080/` that is not included in this repo (frontend-only import).
+- Dependencies must be installed via `cd frontend && npm install` before the first run.
 
 ## User preferences
 
-<!-- Add any remembered user preferences here -->
+<!-- Add any user preferences here -->
