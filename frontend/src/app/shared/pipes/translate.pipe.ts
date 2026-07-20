@@ -13,6 +13,6 @@ export class TranslatePipe implements PipeTransform {
   private i18n = inject(I18nService);
 
   transform(key: string, params?: Record<string, any>): string {
-    return this.i18n.translate(key, params);
+    return this.i18n.translate(key);
   }
 }

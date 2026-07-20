@@ -6,7 +6,8 @@
  * from different features to maintain a scalable store architecture.
  */
 
-import { Provider } from '@angular/core';
+import { EnvironmentProviders } from '@angular/core';
+import { ActionReducerMap } from '@ngrx/store';
 import { provideStore } from '@ngrx/store';
 import { provideEffects } from '@ngrx/effects';
 
@@ -31,14 +32,14 @@ export interface AppState {
  * Store Configuration Providers
  * Include all feature store configurations
  */
-export function getStoreConfig(): Provider[] {
+export function getStoreConfig(): EnvironmentProviders[] {
   return [
     provideStore({
       [EMPLOYEES_STORE_CONFIG.featureName]: EMPLOYEES_STORE_CONFIG.reducer,
       [DASHBOARD_STORE_CONFIG.featureName]: DASHBOARD_STORE_CONFIG.reducer,
       [PERFORMANCE_STORE_CONFIG.featureName]: PERFORMANCE_STORE_CONFIG.reducer,
       [PREFERENCES_STORE_CONFIG.featureName]: PREFERENCES_STORE_CONFIG.reducer,
-    }),
+    } as ActionReducerMap<any>),
     provideEffects([
       ...EMPLOYEES_STORE_CONFIG.effects,
       ...DASHBOARD_STORE_CONFIG.effects,

@@ -23,14 +23,14 @@ export interface StatsCardData {
     <div class="stats-card" [ngClass]="'card-' + (data?.color || 'primary')">
       <div class="stats-header">
         <h4 class="stats-title">{{ data?.title }}</h4>
-        <span class="stats-icon" *ngIf="data?.icon">{{ data.icon }}</span>
+        <span class="stats-icon" *ngIf="data?.icon">{{ data?.icon }}</span>
       </div>
       <div class="stats-value">{{ data?.value }}</div>
       <div class="stats-footer" *ngIf="data?.change !== undefined">
-        <span class="change-value" [ngClass]="data.change >= 0 ? 'positive' : 'negative'">
-          {{ data.change >= 0 ? '+' : '' }}{{ data.change }}%
+        <span class="change-value" [ngClass]="(data?.change ?? 0) >= 0 ? 'positive' : 'negative'">
+          {{ (data?.change ?? 0) >= 0 ? '+' : '' }}{{ data?.change }}%
         </span>
-        <span class="stats-label" *ngIf="data?.label">{{ data.label }}</span>
+        <span class="stats-label" *ngIf="data?.label">{{ data?.label }}</span>
       </div>
     </div>
   `,

@@ -33,31 +33,43 @@
 // export { ModalComponent } from './ui/modal/modal.component';
 
 // Data Components
-export { DataTableComponent } from './ui/data-table/data-table.component';
-export { FilterPanelComponent } from './ui/filter-panel/filter-panel.component';
-// export { SearchInputComponent } from './ui/search-input/search-input.component';
-
-// Visualization Components
-// export { ChartComponent } from './ui/chart/chart.component';
-// export { KPICardComponent } from './ui/kpi-card/kpi-card.component';
+import { DataTableComponent } from './ui/data-table/data-table.component';
+import { FilterPanelComponent } from './ui/filter-panel/filter-panel.component';
+export { DataTableComponent, FilterPanelComponent };
 
 // Connection Components
-export { ConnectionStatusComponent } from './ui/connection-status/connection-status.component';
-// export { NotificationCenterComponent } from './ui/notification-center/notification-center.component';
+import { ConnectionStatusComponent } from './ui/connection-status/connection-status.component';
+export { ConnectionStatusComponent };
 
 // ============================================
 // Common Components
 // ============================================
 
-// export { DataGridComponent } from './common/data-grid/data-grid.component';
-// export { ExportButtonComponent } from './common/export-button/export-button.component';
-// export { PaginationComponent } from './common/pagination/pagination.component';
-// export { EmptyStateComponent } from './common/empty-state/empty-state.component';
-export { LoadingSkeletonComponent } from './common/loading-skeleton/loading-skeleton.component';
-export { ToastComponent } from './common/toast/toast.component';
-export { AlertComponent } from './common/alert/alert.component';
+import { LoadingSkeletonComponent } from './common/loading-skeleton/loading-skeleton.component';
+import { ToastComponent } from './common/toast/toast.component';
+import { AlertComponent } from './common/alert/alert.component';
+export { LoadingSkeletonComponent, ToastComponent, AlertComponent };
 // export { ConfirmDialogComponent } from './common/confirm-dialog/confirm-dialog.component';
 // export { BreadcrumbsComponent } from './common/breadcrumbs/breadcrumbs.component';
+
+// UI component groups (based on currently implemented components)
+export const UI_FORM_COMPONENTS: any[] = [];
+export const UI_DISPLAY_COMPONENTS: any[] = [];
+export const UI_COMPLEX_COMPONENTS: any[] = [];
+export const UI_DATA_COMPONENTS = [DataTableComponent, FilterPanelComponent];
+export const UI_VISUALIZATION_COMPONENTS: any[] = [];
+export const UI_CONNECTION_COMPONENTS = [ConnectionStatusComponent];
+
+export const ALL_UI_COMPONENTS = [
+  ...UI_DATA_COMPONENTS,
+  ...UI_CONNECTION_COMPONENTS,
+];
+
+export const COMMON_COMPONENTS = [
+  LoadingSkeletonComponent,
+  ToastComponent,
+  AlertComponent,
+];
 
 export const ALL_SHARED_COMPONENTS = [
   ...ALL_UI_COMPONENTS,

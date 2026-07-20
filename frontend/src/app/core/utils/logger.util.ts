@@ -32,6 +32,8 @@ export class Logger {
   }
 
   private static isProduction(): boolean {
-    return (window as any)['ng'].probe(document.body).injector.get('platform') === 'prod';
+    return typeof window !== 'undefined' && window.location.hostname !== 'localhost' &&
+      !window.location.hostname.includes('127.0.0.1') &&
+      !window.location.hostname.includes('.replit.dev');
   }
 }

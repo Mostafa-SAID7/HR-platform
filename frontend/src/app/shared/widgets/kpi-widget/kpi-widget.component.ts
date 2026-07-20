@@ -23,16 +23,16 @@ export interface KPIData {
     <div class="kpi-widget" [ngClass]="'kpi-' + (data?.color || 'blue')">
       <div class="kpi-header">
         <h3 class="kpi-title">{{ data?.title }}</h3>
-        <span class="kpi-icon" *ngIf="data?.icon">{{ data.icon }}</span>
+        <span class="kpi-icon" *ngIf="data?.icon">{{ data?.icon }}</span>
       </div>
       <div class="kpi-content">
         <p class="kpi-value">
           {{ data?.value }}
-          <span class="kpi-unit" *ngIf="data?.unit">{{ data.unit }}</span>
+          <span class="kpi-unit" *ngIf="data?.unit">{{ data?.unit }}</span>
         </p>
-        <div class="kpi-trend" *ngIf="data?.trend" [ngClass]="'trend-' + data.trend">
+        <div class="kpi-trend" *ngIf="data?.trend" [ngClass]="'trend-' + data?.trend">
           <span class="trend-icon">{{ getTrendIcon() }}</span>
-          <span class="trend-value" *ngIf="data?.trendValue">{{ data.trendValue }}%</span>
+          <span class="trend-value" *ngIf="data?.trendValue">{{ data?.trendValue }}%</span>
         </div>
       </div>
     </div>

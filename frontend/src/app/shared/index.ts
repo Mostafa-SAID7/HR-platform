@@ -67,7 +67,11 @@ export {
 // Models
 // ============================================
 
-export * from './models/index';
+// Explicitly export non-conflicting model types
+// (FilterCriteria, SearchResult, Notification are already exported via components/ui/index)
+export type { TableColumn, TableConfig, TableSort, TableFilter } from './models/table.model';
+export type { FilterOperator, AdvancedFilter } from './models/filter.model';
+export type { ToastType, AlertType, Toast, Modal, ModalButton, Breadcrumb } from './models/ui.model';
 
 // ============================================
 // Utilities
@@ -97,12 +101,6 @@ export { SharedModule } from './shared.module';
  * Useful when you want to import all UI components at once
  */
 export {
-  UI_FORM_COMPONENTS,
-  UI_DISPLAY_COMPONENTS,
-  UI_COMPLEX_COMPONENTS,
-  UI_DATA_COMPONENTS,
-  UI_VISUALIZATION_COMPONENTS,
-  UI_CONNECTION_COMPONENTS,
   ALL_UI_COMPONENTS,
 } from './components/index';
 
