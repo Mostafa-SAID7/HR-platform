@@ -193,17 +193,21 @@
 
         <!-- User menu -->
         <div class="relative">
+
+          <!-- Trigger button -->
           <button
-            class="flex items-center gap-1.5 py-0.5 pe-2 ps-1 rounded-lg border border-transparent bg-transparent cursor-pointer transition-all
-                   hover:bg-[var(--gray-100)] hover:border-[var(--surface-border)]"
+            class="flex items-center gap-1.5 py-1 pe-2 ps-1 rounded-lg border border-transparent
+                   transition-all cursor-pointer
+                   hover:bg-gray-100 hover:border-surface-border"
             (click)="isUserMenuOpen.set(!isUserMenuOpen())"
             [attr.aria-expanded]="isUserMenuOpen()"
           >
-            <div class="w-[30px] h-[30px] rounded-[7px] bg-gradient-to-br from-[#4f6ef7] to-[#7c5cfc] flex items-center justify-center text-white text-[12px] font-bold shrink-0">
+            <div class="w-[30px] h-[30px] rounded-[7px] bg-gradient-to-br from-[#4f6ef7] to-[#7c5cfc]
+                        flex items-center justify-center text-white text-xs font-bold shrink-0">
               {{ (currentUser()?.name || 'U')[0] }}
             </div>
             <svg
-              class="text-[var(--gray-400)] transition-transform duration-[120ms]"
+              class="text-gray-400 transition-transform duration-[120ms]"
               [class.rotate-180]="isUserMenuOpen()"
               width="14" height="14" viewBox="0 0 24 24"
               fill="none" stroke="currentColor" stroke-width="2.5"
@@ -212,52 +216,78 @@
             </svg>
           </button>
 
-          <!-- User dropdown -->
+          <!-- Outside-click overlay: sits behind the panel, closes on any click outside -->
+          <div
+            *ngIf="isUserMenuOpen()"
+            class="fixed inset-0 z-[199]"
+            (click)="isUserMenuOpen.set(false)"
+          ></div>
+
+          <!-- Dropdown panel -->
           <div
             *ngIf="isUserMenuOpen()"
             [@fadeIn]
-            class="absolute top-[calc(100%+8px)] end-0 w-[210px] bg-[var(--surface-card)] border border-[var(--surface-border)] rounded-[10px] shadow-[var(--shadow-xl)] z-[200] overflow-hidden"
+            class="absolute top-[calc(100%+6px)] end-0 w-56
+                   bg-surface-card border border-surface-border
+                   rounded-xl shadow-xl z-[200] overflow-hidden"
           >
-            <div class="px-3.5 py-3 border-b border-[var(--surface-divider)] bg-[var(--gray-25)]">
-              <p class="text-[13px] font-semibold text-[var(--gray-900)] m-0">{{ currentUser()?.name }}</p>
-              <p class="text-[11.5px] text-[var(--gray-500)] mt-0.5 m-0">{{ currentUser()?.email }}</p>
+            <!-- User info -->
+            <div class="px-4 py-3 border-b border-surface-divider bg-gray-25">
+              <p class="text-[13px] font-semibold text-gray-900 m-0 truncate">{{ currentUser()?.name }}</p>
+              <p class="text-[11px] text-gray-500 mt-0.5 m-0 truncate">{{ currentUser()?.email }}</p>
             </div>
-            <a
-              routerLink="/profile"
-              class="flex items-center gap-2 px-3.5 py-[9px] text-[13px] text-[var(--gray-700)] w-full no-underline transition-colors
-                     hover:bg-[var(--gray-50)] hover:text-[var(--gray-900)]"
-            >
-              <svg class="text-[var(--gray-400)] shrink-0" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-                <circle cx="12" cy="7" r="4"/>
-              </svg>
-              Profile
-            </a>
-            <a
-              routerLink="/settings"
-              class="flex items-center gap-2 px-3.5 py-[9px] text-[13px] text-[var(--gray-700)] w-full no-underline transition-colors
-                     hover:bg-[var(--gray-50)] hover:text-[var(--gray-900)]"
-            >
-              <svg class="text-[var(--gray-400)] shrink-0" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <circle cx="12" cy="12" r="3"/>
-                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
-              </svg>
-              Settings
-            </a>
-            <div class="h-px bg-[var(--surface-divider)] my-0.5"></div>
-            <button
-              class="flex items-center gap-2 px-3.5 py-[9px] text-[13px] text-[var(--color-error)] border-none w-full text-start cursor-pointer transition-colors
-                     hover:bg-[var(--color-error-muted)]"
-              (click)="logout()"
-            >
-              <svg class="text-[var(--color-error)] shrink-0" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
-                <polyline points="16 17 21 12 16 7"/>
-                <line x1="21" y1="12" x2="9" y2="12"/>
-              </svg>
-              Sign out
-            </button>
+
+            <!-- Menu links -->
+            <div class="py-1">
+              <a
+                routerLink="/settings"
+                (click)="isUserMenuOpen.set(false)"
+                class="flex items-center gap-2.5 px-4 py-2.5 w-full no-underline
+                       text-sm font-medium text-gray-700 transition-colors
+                       hover:bg-gray-50 hover:text-gray-900"
+              >
+                <svg class="text-gray-400 shrink-0" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                  <circle cx="12" cy="7" r="4"/>
+                </svg>
+                Profile
+              </a>
+              <a
+                routerLink="/settings"
+                (click)="isUserMenuOpen.set(false)"
+                class="flex items-center gap-2.5 px-4 py-2.5 w-full no-underline
+                       text-sm font-medium text-gray-700 transition-colors
+                       hover:bg-gray-50 hover:text-gray-900"
+              >
+                <svg class="text-gray-400 shrink-0" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+                  <circle cx="12" cy="12" r="3"/>
+                  <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+                </svg>
+                Settings
+              </a>
+            </div>
+
+            <!-- Divider -->
+            <div class="h-px bg-surface-divider"></div>
+
+            <!-- Sign out -->
+            <div class="py-1">
+              <button
+                class="flex items-center gap-2.5 px-4 py-2.5 w-full text-start
+                       text-sm font-medium text-error cursor-pointer transition-colors
+                       hover:bg-[var(--color-error-muted)]"
+                (click)="logout(); isUserMenuOpen.set(false)"
+              >
+                <svg class="text-error shrink-0" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+                  <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                  <polyline points="16 17 21 12 16 7"/>
+                  <line x1="21" y1="12" x2="9" y2="12"/>
+                </svg>
+                Sign out
+              </button>
+            </div>
           </div>
+
         </div>
       </div>
     </header>
