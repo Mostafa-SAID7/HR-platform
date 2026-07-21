@@ -160,6 +160,17 @@ Each service has complete documentation including:
 
 **→ Detailed guide: [docs/guides/DEVELOPMENT_SETUP.md](docs/guides/DEVELOPMENT_SETUP.md)**
 
+### Code Review & Refactoring
+
+Comprehensive guide for maintaining clean code and SOLID principles:
+
+**→ Read: [CODE_REVIEW_REFACTORING.md](CODE_REVIEW_REFACTORING.md)**
+- Identifies 8 large files with SRP violations
+- SOLID principles best practices
+- File organization patterns
+- Naming conventions
+- Step-by-step refactoring examples
+
 ## 🔒 Security
 
 - JWT authentication with refresh tokens
