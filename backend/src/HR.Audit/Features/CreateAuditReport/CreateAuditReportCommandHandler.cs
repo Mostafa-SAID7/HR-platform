@@ -2,6 +2,7 @@ namespace HR.Audit.Features.CreateAuditReport;
 
 using MediatR;
 using Microsoft.Extensions.Caching.Distributed;
+using HR.Audit.Application.Mappings;
 
 /// <summary>
 /// Handler for CreateAuditReportCommand
@@ -69,17 +70,8 @@ public class CreateAuditReportCommandHandler : ICommandHandler<CreateAuditReport
 
             _logger.LogInformation("Audit report created: {ReportId} ({ReportType})", report.Id, reportType);
 
-            return new AuditReportDto(
-                report.Id,
-                report.Title,
-                report.Description,
-                report.GeneratedAt,
-                report.StartDate,
-                report.EndDate,
-                report.Type.ToString(),
-                report.Status.ToString(),
-                report.Events.Count,
-                report.GeneratedByUserId);
+            // Use centralized mapping instead of inline
+            return report.ToDto();
         }
         catch (Exception ex)
         {

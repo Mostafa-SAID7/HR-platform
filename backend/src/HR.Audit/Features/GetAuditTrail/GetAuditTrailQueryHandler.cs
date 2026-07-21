@@ -2,6 +2,7 @@ namespace HR.Audit.Features.GetAuditTrail;
 
 using MediatR;
 using Microsoft.Extensions.Caching.Distributed;
+using HR.Audit.Application.Mappings;
 
 /// <summary>
 /// Handler for GetAuditTrailQuery
@@ -30,45 +31,17 @@ public class GetAuditTrailQueryHandler : IQueryHandler<GetAuditTrailQuery, Audit
             {
                 _logger.LogWarning("No audit trail found for {EntityType}:{EntityId}", request.EntityType, request.EntityId);
                 
-                // Return empty trail
-                return new AuditTrailDetailDto(
-                    request.EntityId,
-                    request.EntityType,
-                    DateTime.MinValue,
-                    DateTime.MinValue,
-                    0,
-                    [],
-                    []);
+                // Return empty trail using centralized mapping
+                var emptyTrail = AuditTrail.CreateEmpty(request.EntityId, request.EntityType, request.TenantId);
+                return emptyTrail.ToDetailDto();
             }
 
             var trail = System.Text.Json.JsonSerializer.Deserialize<AuditTrail>(trailJson);
             if (trail == null)
                 throw new InvalidOperationException("Failed to deserialize audit trail");
 
-            var eventDtos = trail.Events
-                .Select(e => new AuditEventDto(
-                    e.Id,
-                    e.EntityId,
-                    e.EntityType,
-                    e.Action,
-                    e.UserId,
-                    e.UserEmail,
-                    e.Timestamp,
-                    e.OldValues,
-                    e.NewValues,
-                    e.Reason,
-                    e.Severity.ToString(),
-                    e.IpAddress))
-                .ToList();
-
-            return new AuditTrailDetailDto(
-                trail.EntityId,
-                trail.EntityType,
-                trail.FirstChangeAt,
-                trail.LastChangeAt,
-                trail.ChangeCount,
-                trail.AffectedUsers,
-                eventDtos);
+            // Use centralized mapping instead of inline
+            return trail.ToDetailDto();
         }
         catch (Exception ex)
         {
