@@ -1,0 +1,16 @@
+global using HR.Common;
+global using HR.Common.Domain;
+global using HR.Common.Middleware;
+global using HR.Common.Results;
+global using HR.Common.Exceptions;
+global using HR.Common.Persistence;
+global using HR.Common.CQRS;
+global using HR.Common.Dto;
+global using HR.Common.Pagination;
+global using HR.Payroll.Domain;
+global using HR.Payroll.Application.Dtos;
+global using HR.Payroll.Infrastructure.Persistence;
+global using MediatR;
+global using FluentValidation;
+global using Microsoft.EntityFrameworkCore;
+global using Serilog;

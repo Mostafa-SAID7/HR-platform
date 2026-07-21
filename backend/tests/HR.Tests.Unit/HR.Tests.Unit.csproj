@@ -1,0 +1,34 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <IsPackable>false</IsPackable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="xunit" Version="2.6.2" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.5.3">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
+    <PackageReference Include="Moq" Version="4.20.70" />
+    <PackageReference Include="FluentAssertions" Version="6.11.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="9.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\HR.Common\HR.Common.csproj" />
+    <ProjectReference Include="..\..\src\HR.Employee\HR.Employee.csproj" />
+    <ProjectReference Include="..\..\src\HR.Identity\HR.Identity.csproj" />
+    <ProjectReference Include="..\..\src\HR.Performance\HR.Performance.csproj" />
+    <ProjectReference Include="..\..\src\HR.Attendance\HR.Attendance.csproj" />
+    <ProjectReference Include="..\..\src\HR.Payroll\HR.Payroll.csproj" />
+    <ProjectReference Include="..\..\src\HR.Analytics\HR.Analytics.csproj" />
+  </ItemGroup>
+
+</Project>
+

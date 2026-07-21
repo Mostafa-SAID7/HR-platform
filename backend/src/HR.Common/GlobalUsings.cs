@@ -1,0 +1,17 @@
+global using HR.Common.Domain;
+global using HR.Common.Results;
+global using HR.Common.Exceptions;
+global using HR.Common.Persistence;
+global using HR.Common.CQRS;
+global using HR.Common.Dto;
+global using HR.Common.Caching;
+global using HR.Common.Outbox;
+global using HR.Common.Messaging;
+global using HR.Common.Specifications;
+global using HR.Common.Middleware;
+global using MediatR;
+global using FluentValidation;
+global using Microsoft.AspNetCore.Builder;
+global using Microsoft.AspNetCore.Http;
+global using MassTransit;
+global using Microsoft.Extensions.Logging;

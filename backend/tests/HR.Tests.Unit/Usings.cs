@@ -1,0 +1,12 @@
+global using Xunit;
+global using Moq;
+global using FluentAssertions;
+global using HR.Common;
+global using HR.Common.Domain;
+global using HR.Common.CQRS;
+global using HR.Common.Persistence;
+global using HR.Common.Messaging;
+global using HR.Common.Outbox;
+global using MediatR;
+global using Microsoft.EntityFrameworkCore;
+global using Microsoft.Extensions.Logging;
