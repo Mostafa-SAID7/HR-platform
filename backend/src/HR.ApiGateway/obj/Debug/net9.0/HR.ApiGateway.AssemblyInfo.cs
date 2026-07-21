@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("HR.ApiGateway")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+21f0270da4b9a76b9159fe9071023ff81f51a236")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+85440ea60906e64ba8d4b9e01a5d9cc1bc9f4369")]
 [assembly: System.Reflection.AssemblyProductAttribute("HR.ApiGateway")]
 [assembly: System.Reflection.AssemblyTitleAttribute("HR.ApiGateway")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
