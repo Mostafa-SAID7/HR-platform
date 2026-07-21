@@ -3,6 +3,7 @@ namespace HR.Notification.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using HR.Notification.Domain;
 using HR.Notification.Infrastructure.Persistence.Configurations;
+using HR.Notification.Infrastructure.Persistence.Seeds;
 using HR.Common.Outbox;
 
 /// <summary>
@@ -27,6 +28,9 @@ public class NotificationDbContext : DbContext, IUnitOfWork
         modelBuilder.ApplyConfiguration(new NotificationTemplateConfiguration());
         modelBuilder.ApplyConfiguration(new NotificationPreferenceConfiguration());
         modelBuilder.ApplyConfiguration(new OutboxMessageConfiguration());
+
+        // Seed initial data
+        NotificationTemplateSeed.Seed(modelBuilder);
     }
 
     public async Task<bool> SaveEntitiesAsync(CancellationToken cancellationToken = default)

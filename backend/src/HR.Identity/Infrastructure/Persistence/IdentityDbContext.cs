@@ -3,6 +3,7 @@ namespace HR.Identity.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using HR.Identity.Domain;
 using HR.Identity.Infrastructure.Persistence.Configurations;
+using HR.Identity.Infrastructure.Persistence.Seeds;
 using HR.Common.Outbox;
 
 /// <summary>
@@ -37,5 +38,10 @@ public class IdentityDbContext : DbContext
         modelBuilder.ApplyConfiguration(new RolePermissionConfiguration());
         modelBuilder.ApplyConfiguration(new RoleClaimConfiguration());
         modelBuilder.ApplyConfiguration(new OutboxMessageConfiguration());
+
+        // Seed initial data
+        UserSeed.Seed(modelBuilder);
+        RoleSeed.Seed(modelBuilder);
+        PermissionSeed.Seed(modelBuilder);
     }
 }
