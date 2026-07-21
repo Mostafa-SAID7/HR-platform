@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "ZdiipZOYjSo=",
+  "dgSpecHash": "+4QJF12fE1U=",
   "success": false,
-  "projectFilePath": "C:\\Users\\cw_14\\Downloads\\New folder (3)\\backend\\src\\HR.Identity\\HR.Identity.csproj",
+  "projectFilePath": "C:\\Users\\cw_14\\Downloads\\New folder (3)\\HR-platform\\backend\\src\\HR.Identity\\HR.Identity.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\cw_14\\.nuget\\packages\\aspnetcore.healthchecks.npgsql\\9.0.0\\aspnetcore.healthchecks.npgsql.9.0.0.nupkg.sha512",
     "C:\\Users\\cw_14\\.nuget\\packages\\aspnetcore.healthchecks.redis\\9.0.0\\aspnetcore.healthchecks.redis.9.0.0.nupkg.sha512",
@@ -106,9 +106,9 @@
       "code": "NU1603",
       "level": "Warning",
       "message": "HR.Common depends on Mapster (>= 8.1.5) but Mapster 8.1.5 was not found. Mapster 10.0.0 was resolved instead.",
-      "projectPath": "C:\\Users\\cw_14\\Downloads\\New folder (3)\\backend\\src\\HR.Identity\\HR.Identity.csproj",
+      "projectPath": "C:\\Users\\cw_14\\Downloads\\New folder (3)\\HR-platform\\backend\\src\\HR.Identity\\HR.Identity.csproj",
       "warningLevel": 1,
-      "filePath": "C:\\Users\\cw_14\\Downloads\\New folder (3)\\backend\\src\\HR.Identity\\HR.Identity.csproj",
+      "filePath": "C:\\Users\\cw_14\\Downloads\\New folder (3)\\HR-platform\\backend\\src\\HR.Identity\\HR.Identity.csproj",
       "libraryId": "Mapster",
       "targetGraphs": [
         "net9.0"
@@ -118,9 +118,9 @@
       "code": "NU1603",
       "level": "Warning",
       "message": "HR.Common depends on Mapster.DependencyInjection (>= 8.1.5) but Mapster.DependencyInjection 8.1.5 was not found. Mapster.DependencyInjection 10.0.0 was resolved instead.",
-      "projectPath": "C:\\Users\\cw_14\\Downloads\\New folder (3)\\backend\\src\\HR.Identity\\HR.Identity.csproj",
+      "projectPath": "C:\\Users\\cw_14\\Downloads\\New folder (3)\\HR-platform\\backend\\src\\HR.Identity\\HR.Identity.csproj",
       "warningLevel": 1,
-      "filePath": "C:\\Users\\cw_14\\Downloads\\New folder (3)\\backend\\src\\HR.Identity\\HR.Identity.csproj",
+      "filePath": "C:\\Users\\cw_14\\Downloads\\New folder (3)\\HR-platform\\backend\\src\\HR.Identity\\HR.Identity.csproj",
       "libraryId": "Mapster.DependencyInjection",
       "targetGraphs": [
         "net9.0"
@@ -130,8 +130,8 @@
       "code": "NU1102",
       "level": "Error",
       "message": "Unable to find package Microsoft.AspNetCore.Identity with version (>= 9.0.0)\r\n  - Found 44 version(s) in nuget.org [ Nearest version: 2.3.11 ]\r\n  - Found 0 version(s) in Microsoft Visual Studio Offline Packages",
-      "projectPath": "C:\\Users\\cw_14\\Downloads\\New folder (3)\\backend\\src\\HR.Identity\\HR.Identity.csproj",
-      "filePath": "C:\\Users\\cw_14\\Downloads\\New folder (3)\\backend\\src\\HR.Identity\\HR.Identity.csproj",
+      "projectPath": "C:\\Users\\cw_14\\Downloads\\New folder (3)\\HR-platform\\backend\\src\\HR.Identity\\HR.Identity.csproj",
+      "filePath": "C:\\Users\\cw_14\\Downloads\\New folder (3)\\HR-platform\\backend\\src\\HR.Identity\\HR.Identity.csproj",
       "libraryId": "Microsoft.AspNetCore.Identity",
       "targetGraphs": [
         "net9.0"
@@ -141,8 +141,8 @@
       "code": "NU1101",
       "level": "Error",
       "message": "Unable to find package Microsoft.EntityFrameworkCore.PostgreSQL. No packages exist with this id in source(s): Microsoft Visual Studio Offline Packages, nuget.org",
-      "projectPath": "C:\\Users\\cw_14\\Downloads\\New folder (3)\\backend\\src\\HR.Identity\\HR.Identity.csproj",
-      "filePath": "C:\\Users\\cw_14\\Downloads\\New folder (3)\\backend\\src\\HR.Identity\\HR.Identity.csproj",
+      "projectPath": "C:\\Users\\cw_14\\Downloads\\New folder (3)\\HR-platform\\backend\\src\\HR.Identity\\HR.Identity.csproj",
+      "filePath": "C:\\Users\\cw_14\\Downloads\\New folder (3)\\HR-platform\\backend\\src\\HR.Identity\\HR.Identity.csproj",
       "libraryId": "Microsoft.EntityFrameworkCore.PostgreSQL",
       "targetGraphs": [
         "net9.0"
@@ -152,8 +152,8 @@
       "code": "NU1605",
       "level": "Error",
       "message": "Warning As Error: Detected package downgrade: System.IdentityModel.Tokens.Jwt from 8.0.1 to 7.5.1. Reference the package directly from the project to select a different version. \r\n HR.Identity -> Microsoft.AspNetCore.Authentication.JwtBearer 9.0.0 -> Microsoft.IdentityModel.Protocols.OpenIdConnect 8.0.1 -> System.IdentityModel.Tokens.Jwt (>= 8.0.1) \r\n HR.Identity -> System.IdentityModel.Tokens.Jwt (>= 7.5.1)",
-      "projectPath": "C:\\Users\\cw_14\\Downloads\\New folder (3)\\backend\\src\\HR.Identity\\HR.Identity.csproj",
-      "filePath": "C:\\Users\\cw_14\\Downloads\\New folder (3)\\backend\\src\\HR.Identity\\HR.Identity.csproj",
+      "projectPath": "C:\\Users\\cw_14\\Downloads\\New folder (3)\\HR-platform\\backend\\src\\HR.Identity\\HR.Identity.csproj",
+      "filePath": "C:\\Users\\cw_14\\Downloads\\New folder (3)\\HR-platform\\backend\\src\\HR.Identity\\HR.Identity.csproj",
       "libraryId": "System.IdentityModel.Tokens.Jwt",
       "targetGraphs": [
         "net9.0"

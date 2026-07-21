@@ -5166,11 +5166,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\cw_14\\Downloads\\New folder (3)\\backend\\src\\HR.Identity\\HR.Identity.csproj",
+      "projectUniqueName": "C:\\Users\\cw_14\\Downloads\\New folder (3)\\HR-platform\\backend\\src\\HR.Identity\\HR.Identity.csproj",
       "projectName": "HR.Identity",
-      "projectPath": "C:\\Users\\cw_14\\Downloads\\New folder (3)\\backend\\src\\HR.Identity\\HR.Identity.csproj",
+      "projectPath": "C:\\Users\\cw_14\\Downloads\\New folder (3)\\HR-platform\\backend\\src\\HR.Identity\\HR.Identity.csproj",
       "packagesPath": "C:\\Users\\cw_14\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\cw_14\\Downloads\\New folder (3)\\backend\\src\\HR.Identity\\obj\\",
+      "outputPath": "C:\\Users\\cw_14\\Downloads\\New folder (3)\\HR-platform\\backend\\src\\HR.Identity\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -5192,8 +5192,8 @@
           "framework": "net9.0",
           "targetAlias": "net9.0",
           "projectReferences": {
-            "C:\\Users\\cw_14\\Downloads\\New folder (3)\\backend\\src\\HR.Common\\HR.Common.csproj": {
-              "projectPath": "C:\\Users\\cw_14\\Downloads\\New folder (3)\\backend\\src\\HR.Common\\HR.Common.csproj"
+            "C:\\Users\\cw_14\\Downloads\\New folder (3)\\HR-platform\\backend\\src\\HR.Common\\HR.Common.csproj": {
+              "projectPath": "C:\\Users\\cw_14\\Downloads\\New folder (3)\\HR-platform\\backend\\src\\HR.Common\\HR.Common.csproj"
             }
           }
         }

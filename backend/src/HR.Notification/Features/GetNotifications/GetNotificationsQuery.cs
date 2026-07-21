@@ -1,16 +1,13 @@
 namespace HR.Notification.Features.GetNotifications;
 
+using HR.Notification.Application.Dtos.Notification;
+
 /// <summary>
 /// Get all notifications for a user
 /// </summary>
 public record GetNotificationsQuery(
     NotificationFilterDto Filter,
     Guid TenantId) : IQuery<PaginatedResult<NotificationListDto>>;
-
-/// <summary>
-/// Handler for GetNotificationsQuery
-/// </summary>
-public class GetNotificationsQueryHandler : IQueryHandler<GetNotificationsQuery, PaginatedResult<NotificationListDto>>
 {
     private readonly NotificationDbContext _dbContext;
 
