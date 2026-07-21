@@ -4,26 +4,25 @@ This folder contains comprehensive market analysis, positioning, and go-to-marke
 
 ## 📑 Contents
 
+### Executive Summary
+- **[MARKET-SUMMARY.md](./MARKET-SUMMARY.md)** - Quick reference guide for all audiences (investors, sales, marketing, product)
+
 ### Strategic Analysis
-- **[market-overview.md](./market-overview.md)** - Market size, trends, and opportunities
-- **[positioning.md](./positioning.md)** - Product positioning & value proposition
-- **[competitive-analysis.md](./competitive-analysis.md)** - Competitor landscape & differentiation
+- **[market-overview.md](./market-overview.md)** - Market size ($9.2B), trends, and opportunities
+- **[market-analysis-legacy.md](./market-analysis-legacy.md)** - Detailed market analysis (consolidated)
+- **[positioning.md](./positioning.md)** - Product positioning & blue ocean strategy
+- **[competitive-analysis.md](./competitive-analysis.md)** - Competitor landscape (Visier, Culture Amp, Lattice, incumbents)
 
-### Customer Insights
-- **[buyer-personas.md](./buyer-personas.md)** - Target customer profiles & decision makers
-- **[customer-pain-points.md](./customer-pain-points.md)** - Deep dive into customer problems
-- **[use-cases.md](./use-cases.md)** - Key use cases and business benefits
+### Customer Insights & Product
+- **[buyer-personas.md](./buyer-personas.md)** - 4 target personas (CPO, Analytics Manager, VP Talent, CFO) with detailed profiles
+- **[features-benefits.md](./features-benefits.md)** - 6 core features, use cases, ROI stories, and persona benefits
 
-### Go-to-Market
-- **[pricing-strategy.md](./pricing-strategy.md)** - Pricing models and packaging
-- **[go-to-market.md](./go-to-market.md)** - Market entry strategy and execution plan
-- **[messaging.md](./messaging.md)** - Marketing messaging & brand guidelines
-- **[sales-playbook.md](./sales-playbook.md)** - Sales enablement and talking points
+### Technology & Integrations
+- **[integrations-ecosystem.md](./integrations-ecosystem.md)** - 50+ system integrations including Workday, ADP, Greenhouse, **Odoo**, **Next ERP**, and more
 
-### Market Data
-- **[market-sizing.md](./market-sizing.md)** - TAM/SAM/SOM calculations
-- **[market-trends.md](./market-trends.md)** - Current and emerging trends
-- **[geographic-strategy.md](./geographic-strategy.md)** - Regional market opportunities
+### Go-to-Market & Sales
+- **[pricing-strategy.md](./pricing-strategy.md)** - 3-tier pricing model ($30k/$60k/$120k) with financial justification
+- **[go-to-market.md](./go-to-market.md)** - 3-phase GTM strategy (Validate/Scale/Leadership), sales structure, marketing campaigns
 
 ## 🎯 Quick Facts
 
@@ -100,34 +99,40 @@ This folder contains comprehensive market analysis, positioning, and go-to-marke
 
 ## 📖 How to Use This Documentation
 
-**For Fundraising:**
-- Start with `market-overview.md` + `market-sizing.md`
-- Use `competitive-analysis.md` for differentiation
-- Reference `sales-playbook.md` for traction
+**For Investors/Board:**
+- Start: `market-overview.md` (market size & opportunity)
+- Then: `competitive-analysis.md` (why we win)
+- Then: `features-benefits.md` (what we're building)
+- Then: `go-to-market.md` (execution plan)
+- Then: `integrations-ecosystem.md` (why we're comprehensive)
 
 **For Sales Team:**
-- Read `buyer-personas.md` for target profiles
-- Use `messaging.md` for talking points
-- Reference `use-cases.md` for customer examples
-- Follow `sales-playbook.md` for process
+- Start: `buyer-personas.md` (know your customer)
+- Then: `features-benefits.md` (use cases & ROI)
+- Then: `integrations-ecosystem.md` (why we integrate better)
+- Then: `pricing-strategy.md` (justify the price)
+- Then: `competitive-analysis.md` (win arguments vs competitors)
 
-**For Marketing:**
-- Review `positioning.md` for brand messaging
-- Use `customer-pain-points.md` for content themes
-- Reference `messaging.md` for campaigns
-- Check `market-trends.md` for thought leadership
+**For Marketing Team:**
+- Start: `positioning.md` (brand strategy)
+- Then: `market-overview.md` (understand market)
+- Then: `buyer-personas.md` (audience understanding)
+- Then: `go-to-market.md` (campaign strategy)
+- Then: `MARKET-SUMMARY.md` (quick facts for copy)
 
-**For Product:**
-- Read `customer-pain-points.md` for priorities
-- Review `use-cases.md` for feature validation
-- Check `competitive-analysis.md` for feature gaps
-- Reference `buyer-personas.md` for user research
+**For Product/Engineering:**
+- Start: `buyer-personas.md` (user needs)
+- Then: `features-benefits.md` (feature validation)
+- Then: `competitive-analysis.md` (feature gaps vs competitors)
+- Then: `integrations-ecosystem.md` (integration roadmap)
+- Then: `market-overview.md` (market trends shaping priorities)
 
-**For Investors/Board:**
-- Read `market-overview.md` for opportunity
-- Review `competitive-analysis.md` for differentiation
-- Check `market-sizing.md` for addressable market
-- Reference `go-to-market.md` for execution
+**For Partners/Channels:**
+- Start: `MARKET-SUMMARY.md` (quick overview)
+- Then: `competitive-analysis.md` (positioning)
+- Then: `features-benefits.md` (value to customers)
+- Then: `integrations-ecosystem.md` (integration ecosystem)
+- Then: `go-to-market.md` (channel strategy)
 
 ---
 
