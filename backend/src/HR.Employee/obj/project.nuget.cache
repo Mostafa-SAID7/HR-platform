@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "t/ZhZC0/uaE=",
-  "success": false,
-  "projectFilePath": "C:\\Users\\cw_14\\Downloads\\New folder (3)\\backend\\src\\HR.Employee\\HR.Employee.csproj",
+  "dgSpecHash": "15b0jfAMZKU=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\cw_14\\Downloads\\New folder (3)\\HR-platform\\backend\\src\\HR.Employee\\HR.Employee.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\cw_14\\.nuget\\packages\\aspnetcore.healthchecks.npgsql\\9.0.0\\aspnetcore.healthchecks.npgsql.9.0.0.nupkg.sha512",
     "C:\\Users\\cw_14\\.nuget\\packages\\aspnetcore.healthchecks.redis\\9.0.0\\aspnetcore.healthchecks.redis.9.0.0.nupkg.sha512",
@@ -34,7 +34,6 @@
     "C:\\Users\\cw_14\\.nuget\\packages\\microsoft.entityframeworkcore.analyzers\\9.0.0\\microsoft.entityframeworkcore.analyzers.9.0.0.nupkg.sha512",
     "C:\\Users\\cw_14\\.nuget\\packages\\microsoft.entityframeworkcore.design\\9.0.0\\microsoft.entityframeworkcore.design.9.0.0.nupkg.sha512",
     "C:\\Users\\cw_14\\.nuget\\packages\\microsoft.entityframeworkcore.relational\\9.0.0\\microsoft.entityframeworkcore.relational.9.0.0.nupkg.sha512",
-    "C:\\Users\\cw_14\\.nuget\\packages\\microsoft.entityframeworkcore.tools\\9.0.0\\microsoft.entityframeworkcore.tools.9.0.0.nupkg.sha512",
     "C:\\Users\\cw_14\\.nuget\\packages\\microsoft.extensions.caching.abstractions\\9.0.0\\microsoft.extensions.caching.abstractions.9.0.0.nupkg.sha512",
     "C:\\Users\\cw_14\\.nuget\\packages\\microsoft.extensions.caching.memory\\9.0.0\\microsoft.extensions.caching.memory.9.0.0.nupkg.sha512",
     "C:\\Users\\cw_14\\.nuget\\packages\\microsoft.extensions.caching.stackexchangeredis\\9.0.0\\microsoft.extensions.caching.stackexchangeredis.9.0.0.nupkg.sha512",
@@ -54,7 +53,8 @@
     "C:\\Users\\cw_14\\.nuget\\packages\\microsoft.extensions.primitives\\9.0.0\\microsoft.extensions.primitives.9.0.0.nupkg.sha512",
     "C:\\Users\\cw_14\\.nuget\\packages\\mono.texttemplating\\3.0.0\\mono.texttemplating.3.0.0.nupkg.sha512",
     "C:\\Users\\cw_14\\.nuget\\packages\\newtonsoft.json\\11.0.2\\newtonsoft.json.11.0.2.nupkg.sha512",
-    "C:\\Users\\cw_14\\.nuget\\packages\\npgsql\\8.0.3\\npgsql.8.0.3.nupkg.sha512",
+    "C:\\Users\\cw_14\\.nuget\\packages\\npgsql\\9.0.0\\npgsql.9.0.0.nupkg.sha512",
+    "C:\\Users\\cw_14\\.nuget\\packages\\npgsql.entityframeworkcore.postgresql\\9.0.0\\npgsql.entityframeworkcore.postgresql.9.0.0.nupkg.sha512",
     "C:\\Users\\cw_14\\.nuget\\packages\\pipelines.sockets.unofficial\\2.2.8\\pipelines.sockets.unofficial.2.2.8.nupkg.sha512",
     "C:\\Users\\cw_14\\.nuget\\packages\\serilog\\4.0.1\\serilog.4.0.1.nupkg.sha512",
     "C:\\Users\\cw_14\\.nuget\\packages\\serilog.aspnetcore\\8.0.1\\serilog.aspnetcore.8.0.1.nupkg.sha512",
@@ -92,9 +92,9 @@
       "code": "NU1603",
       "level": "Warning",
       "message": "HR.Common depends on Mapster (>= 8.1.5) but Mapster 8.1.5 was not found. Mapster 10.0.0 was resolved instead.",
-      "projectPath": "C:\\Users\\cw_14\\Downloads\\New folder (3)\\backend\\src\\HR.Employee\\HR.Employee.csproj",
+      "projectPath": "C:\\Users\\cw_14\\Downloads\\New folder (3)\\HR-platform\\backend\\src\\HR.Employee\\HR.Employee.csproj",
       "warningLevel": 1,
-      "filePath": "C:\\Users\\cw_14\\Downloads\\New folder (3)\\backend\\src\\HR.Employee\\HR.Employee.csproj",
+      "filePath": "C:\\Users\\cw_14\\Downloads\\New folder (3)\\HR-platform\\backend\\src\\HR.Employee\\HR.Employee.csproj",
       "libraryId": "Mapster",
       "targetGraphs": [
         "net9.0"
@@ -104,21 +104,10 @@
       "code": "NU1603",
       "level": "Warning",
       "message": "HR.Common depends on Mapster.DependencyInjection (>= 8.1.5) but Mapster.DependencyInjection 8.1.5 was not found. Mapster.DependencyInjection 10.0.0 was resolved instead.",
-      "projectPath": "C:\\Users\\cw_14\\Downloads\\New folder (3)\\backend\\src\\HR.Employee\\HR.Employee.csproj",
+      "projectPath": "C:\\Users\\cw_14\\Downloads\\New folder (3)\\HR-platform\\backend\\src\\HR.Employee\\HR.Employee.csproj",
       "warningLevel": 1,
-      "filePath": "C:\\Users\\cw_14\\Downloads\\New folder (3)\\backend\\src\\HR.Employee\\HR.Employee.csproj",
+      "filePath": "C:\\Users\\cw_14\\Downloads\\New folder (3)\\HR-platform\\backend\\src\\HR.Employee\\HR.Employee.csproj",
       "libraryId": "Mapster.DependencyInjection",
-      "targetGraphs": [
-        "net9.0"
-      ]
-    },
-    {
-      "code": "NU1101",
-      "level": "Error",
-      "message": "Unable to find package Microsoft.EntityFrameworkCore.PostgreSQL. No packages exist with this id in source(s): Microsoft Visual Studio Offline Packages, nuget.org",
-      "projectPath": "C:\\Users\\cw_14\\Downloads\\New folder (3)\\backend\\src\\HR.Employee\\HR.Employee.csproj",
-      "filePath": "C:\\Users\\cw_14\\Downloads\\New folder (3)\\backend\\src\\HR.Employee\\HR.Employee.csproj",
-      "libraryId": "Microsoft.EntityFrameworkCore.PostgreSQL",
       "targetGraphs": [
         "net9.0"
       ]

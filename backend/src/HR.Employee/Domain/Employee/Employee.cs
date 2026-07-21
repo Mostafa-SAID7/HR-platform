@@ -1,7 +1,12 @@
-namespace HR.Employee.Domain;
+namespace HR.Employee.Domain.Employee;
+
+using HR.Employee.Domain.Department;
+using HR.Employee.Domain.EmployeeSkill;
+using HR.Employee.Domain.EmployeeEducation;
+using HR.Employee.Domain.Employee.Events;
 
 /// <summary>
-/// Employee aggregate root.
+/// Employee aggregate root
 /// </summary>
 public class Employee : AggregateRoot
 {
@@ -19,7 +24,7 @@ public class Employee : AggregateRoot
     public Guid DepartmentId { get; set; }
     public Guid? ManagerId { get; set; }
     public string JobTitle { get; set; } = string.Empty;
-    public string EmploymentType { get; set; } = string.Empty; // Full-time, Part-time, Contract
+    public EmploymentType EmploymentType { get; set; }
     public decimal Salary { get; set; }
     public string Currency { get; set; } = "USD";
     
@@ -32,15 +37,17 @@ public class Employee : AggregateRoot
     
     // Status
     public bool IsActive { get; set; } = true;
-    public string Status { get; set; } = "Active"; // Active, OnLeave, Terminated
+    public EmployeeStatus Status { get; set; }
     
     // Relations
     public Department? Department { get; set; }
     public ICollection<EmployeeSkill> Skills { get; set; } = new List<EmployeeSkill>();
     public ICollection<EmployeeEducation> Education { get; set; } = new List<EmployeeEducation>();
 
+    private Employee() { }
+
     /// <summary>
-    /// Create a new employee.
+    /// Create a new employee
     /// </summary>
     public static Employee Create(
         string firstName,
@@ -53,7 +60,7 @@ public class Employee : AggregateRoot
         DateTime hireDate,
         Guid departmentId,
         string jobTitle,
-        string employmentType,
+        EmploymentType employmentType,
         decimal salary,
         Guid tenantId)
     {
@@ -73,7 +80,7 @@ public class Employee : AggregateRoot
             EmploymentType = employmentType,
             Salary = salary,
             IsActive = true,
-            Status = "Active",
+            Status = EmployeeStatus.Active,
             TenantId = tenantId,
             CreatedOnUtc = DateTime.UtcNow
         };
@@ -92,7 +99,7 @@ public class Employee : AggregateRoot
     }
 
     /// <summary>
-    /// Update employee information.
+    /// Update employee information
     /// </summary>
     public void Update(
         string firstName,
@@ -123,12 +130,12 @@ public class Employee : AggregateRoot
     }
 
     /// <summary>
-    /// Terminate employment.
+    /// Terminate employment
     /// </summary>
     public void Terminate(DateTime terminationDate)
     {
         TerminationDate = terminationDate;
-        Status = "Terminated";
+        Status = EmployeeStatus.Terminated;
         IsActive = false;
         UpdatedOnUtc = DateTime.UtcNow;
 
@@ -144,26 +151,18 @@ public class Employee : AggregateRoot
     }
 
     /// <summary>
-    /// Add a skill to the employee.
+    /// Add a skill to the employee
     /// </summary>
     public void AddSkill(string skillName, int proficiencyLevel)
     {
         if (Skills.Any(s => s.SkillName == skillName))
             return;
 
-        Skills.Add(new EmployeeSkill
-        {
-            Id = Guid.NewGuid(),
-            EmployeeId = Id,
-            SkillName = skillName,
-            ProficiencyLevel = proficiencyLevel,
-            TenantId = TenantId,
-            CreatedOnUtc = DateTime.UtcNow
-        });
+        Skills.Add(EmployeeSkill.Create(Id, skillName, proficiencyLevel, TenantId));
     }
 
     /// <summary>
-    /// Remove a skill from the employee.
+    /// Remove a skill from the employee
     /// </summary>
     public void RemoveSkill(string skillName)
     {
@@ -175,96 +174,12 @@ public class Employee : AggregateRoot
     }
 
     /// <summary>
-    /// Full name of the employee.
+    /// Full name of the employee
     /// </summary>
     public string FullName => $"{FirstName} {LastName}";
 
     /// <summary>
-    /// Age of the employee.
+    /// Age of the employee
     /// </summary>
     public int Age => DateTime.Today.Year - DateOfBirth.Year;
-}
-
-/// <summary>
-/// Department entity.
-/// </summary>
-public class Department : AggregateRoot
-{
-    public string Name { get; set; } = string.Empty;
-    public string Description { get; set; } = string.Empty;
-    public Guid? ManagerId { get; set; }
-    public string Location { get; set; } = string.Empty;
-    public ICollection<Employee> Employees { get; set; } = new List<Employee>();
-
-    public static Department Create(string name, string description, string location, Guid tenantId)
-    {
-        return new Department
-        {
-            Id = Guid.NewGuid(),
-            Name = name,
-            Description = description,
-            Location = location,
-            TenantId = tenantId,
-            CreatedOnUtc = DateTime.UtcNow
-        };
-    }
-}
-
-/// <summary>
-/// Employee skill entity.
-/// </summary>
-public class EmployeeSkill : BaseEntity
-{
-    public Guid EmployeeId { get; set; }
-    public string SkillName { get; set; } = string.Empty;
-    public int ProficiencyLevel { get; set; } // 1-5
-    public Employee? Employee { get; set; }
-}
-
-/// <summary>
-/// Employee education entity.
-/// </summary>
-public class EmployeeEducation : BaseEntity
-{
-    public Guid EmployeeId { get; set; }
-    public string InstitutionName { get; set; } = string.Empty;
-    public string Degree { get; set; } = string.Empty;
-    public string FieldOfStudy { get; set; } = string.Empty;
-    public DateTime GraduationDate { get; set; }
-    public string? Grade { get; set; }
-    public Employee? Employee { get; set; }
-}
-
-// ===== DOMAIN EVENTS =====
-
-/// <summary>
-/// Domain event raised when an employee is created.
-/// </summary>
-public record EmployeeCreatedEvent : DomainEvent
-{
-    public Guid EmployeeId { get; set; }
-    public string FirstName { get; set; } = string.Empty;
-    public string LastName { get; set; } = string.Empty;
-    public string Email { get; set; } = string.Empty;
-}
-
-/// <summary>
-/// Domain event raised when an employee is updated.
-/// </summary>
-public record EmployeeUpdatedEvent : DomainEvent
-{
-    public Guid EmployeeId { get; set; }
-    public string FirstName { get; set; } = string.Empty;
-    public string LastName { get; set; } = string.Empty;
-}
-
-/// <summary>
-/// Domain event raised when an employee is terminated.
-/// </summary>
-public record EmployeeTerminatedEvent : DomainEvent
-{
-    public Guid EmployeeId { get; set; }
-    public string FirstName { get; set; } = string.Empty;
-    public string LastName { get; set; } = string.Empty;
-    public DateTime TerminationDate { get; set; }
 }

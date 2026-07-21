@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\cw_14\\Downloads\\New folder (3)\\backend\\src\\HR.Employee\\HR.Employee.csproj": {}
+    "C:\\Users\\cw_14\\Downloads\\New folder (3)\\HR-platform\\backend\\src\\HR.Employee\\HR.Employee.csproj": {}
   },
   "projects": {
-    "C:\\Users\\cw_14\\Downloads\\New folder (3)\\backend\\src\\HR.Common\\HR.Common.csproj": {
+    "C:\\Users\\cw_14\\Downloads\\New folder (3)\\HR-platform\\backend\\src\\HR.Common\\HR.Common.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\cw_14\\Downloads\\New folder (3)\\backend\\src\\HR.Common\\HR.Common.csproj",
+        "projectUniqueName": "C:\\Users\\cw_14\\Downloads\\New folder (3)\\HR-platform\\backend\\src\\HR.Common\\HR.Common.csproj",
         "projectName": "HR.Common",
-        "projectPath": "C:\\Users\\cw_14\\Downloads\\New folder (3)\\backend\\src\\HR.Common\\HR.Common.csproj",
+        "projectPath": "C:\\Users\\cw_14\\Downloads\\New folder (3)\\HR-platform\\backend\\src\\HR.Common\\HR.Common.csproj",
         "packagesPath": "C:\\Users\\cw_14\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\cw_14\\Downloads\\New folder (3)\\backend\\src\\HR.Common\\obj\\",
+        "outputPath": "C:\\Users\\cw_14\\Downloads\\New folder (3)\\HR-platform\\backend\\src\\HR.Common\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -140,14 +140,14 @@
         }
       }
     },
-    "C:\\Users\\cw_14\\Downloads\\New folder (3)\\backend\\src\\HR.Employee\\HR.Employee.csproj": {
+    "C:\\Users\\cw_14\\Downloads\\New folder (3)\\HR-platform\\backend\\src\\HR.Employee\\HR.Employee.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\cw_14\\Downloads\\New folder (3)\\backend\\src\\HR.Employee\\HR.Employee.csproj",
+        "projectUniqueName": "C:\\Users\\cw_14\\Downloads\\New folder (3)\\HR-platform\\backend\\src\\HR.Employee\\HR.Employee.csproj",
         "projectName": "HR.Employee",
-        "projectPath": "C:\\Users\\cw_14\\Downloads\\New folder (3)\\backend\\src\\HR.Employee\\HR.Employee.csproj",
+        "projectPath": "C:\\Users\\cw_14\\Downloads\\New folder (3)\\HR-platform\\backend\\src\\HR.Employee\\HR.Employee.csproj",
         "packagesPath": "C:\\Users\\cw_14\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\cw_14\\Downloads\\New folder (3)\\backend\\src\\HR.Employee\\obj\\",
+        "outputPath": "C:\\Users\\cw_14\\Downloads\\New folder (3)\\HR-platform\\backend\\src\\HR.Employee\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -169,8 +169,8 @@
             "framework": "net9.0",
             "targetAlias": "net9.0",
             "projectReferences": {
-              "C:\\Users\\cw_14\\Downloads\\New folder (3)\\backend\\src\\HR.Common\\HR.Common.csproj": {
-                "projectPath": "C:\\Users\\cw_14\\Downloads\\New folder (3)\\backend\\src\\HR.Common\\HR.Common.csproj"
+              "C:\\Users\\cw_14\\Downloads\\New folder (3)\\HR-platform\\backend\\src\\HR.Common\\HR.Common.csproj": {
+                "projectPath": "C:\\Users\\cw_14\\Downloads\\New folder (3)\\HR-platform\\backend\\src\\HR.Common\\HR.Common.csproj"
               }
             }
           }
@@ -196,13 +196,17 @@
               "target": "Package",
               "version": "[2.1.15, )"
             },
-            "Microsoft.EntityFrameworkCore.PostgreSQL": {
+            "Microsoft.EntityFrameworkCore": {
               "target": "Package",
               "version": "[9.0.0, )"
             },
-            "Microsoft.EntityFrameworkCore.Tools": {
+            "Microsoft.EntityFrameworkCore.Design": {
               "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
               "suppressParent": "All",
+              "target": "Package",
+              "version": "[9.0.0, )"
+            },
+            "Npgsql.EntityFrameworkCore.PostgreSQL": {
               "target": "Package",
               "version": "[9.0.0, )"
             },

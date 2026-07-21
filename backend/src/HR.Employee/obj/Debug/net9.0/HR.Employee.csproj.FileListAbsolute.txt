@@ -1,0 +1,8 @@
+C:\Users\cw_14\Downloads\New folder (3)\HR-platform\backend\src\HR.Employee\obj\Debug\net9.0\HR.Employee.csproj.AssemblyReference.cache
+C:\Users\cw_14\Downloads\New folder (3)\HR-platform\backend\src\HR.Employee\obj\Debug\net9.0\rpswa.dswa.cache.json
+C:\Users\cw_14\Downloads\New folder (3)\HR-platform\backend\src\HR.Employee\obj\Debug\net9.0\HR.Employee.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\cw_14\Downloads\New folder (3)\HR-platform\backend\src\HR.Employee\obj\Debug\net9.0\HR.Employee.AssemblyInfoInputs.cache
+C:\Users\cw_14\Downloads\New folder (3)\HR-platform\backend\src\HR.Employee\obj\Debug\net9.0\HR.Employee.AssemblyInfo.cs
+C:\Users\cw_14\Downloads\New folder (3)\HR-platform\backend\src\HR.Employee\obj\Debug\net9.0\HR.Employee.csproj.CoreCompileInputs.cache
+C:\Users\cw_14\Downloads\New folder (3)\HR-platform\backend\src\HR.Employee\obj\Debug\net9.0\HR.Employee.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\cw_14\Downloads\New folder (3)\HR-platform\backend\src\HR.Employee\obj\Debug\net9.0\HR.Employee.sourcelink.json
