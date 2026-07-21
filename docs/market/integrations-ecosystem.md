@@ -1078,3 +1078,49 @@ Next ERP → Data Lake → Budget Analysis → Forecasting
 - Contact: enterprise-integrations@hr-analytics.io
 - Response Time: 24 hours
 - Typical Timeline: 2-4 weeks
+
+Core HCMS Systems:
+
+✅ Workday (★★★★★)
+✅ ADP (★★★★★)
+✅ SAP SuccessFactors (★★★★☆)
+✅ BambooHR (★★★★☆)
+✅ Oracle HCM Cloud (★★★☆☆)
+Payroll Systems:
+
+✅ Gusto (★★★★☆)
+✅ Rippling (★★★★☆)
+✅ ADP Payroll (★★★★☆)
+Recruiting Systems:
+
+✅ Greenhouse (★★★★★)
+✅ Lever (★★★★☆)
+✅ LinkedIn Recruiter (★★★★☆)
+✅ Workable (★★★★☆)
+Performance & Engagement:
+
+✅ Lattice (★★★★☆)
+✅ 15Five (★★★☆☆)
+✅ Culture Amp (★★★★★)
+✅ Qualtrics (★★★★☆)
+✅ SurveyMonkey (★★★☆☆)
+Time & Attendance:
+
+✅ Kronos (★★★★★)
+✅ Humaans (★★★☆☆)
+Learning & Development:
+
+✅ LinkedIn Learning (★★★★☆)
+✅ Cornerstone OnDemand (★★★★☆)
+Enterprise ERP Systems:
+
+✅ SAP ERP (★★★★☆)
+✅ Oracle EBS / NetSuite (★★★★☆)
+✅ Odoo ERP (★★★★☆) - NEW in development
+✅ Next ERP (★★★★☆) - NEW in development
+Additional Systems:
+
+✅ Slack (★★★★☆)
+✅ Microsoft Teams (★★★★☆)
+✅ Snowflake (★★★★★)
+✅ Tableau / Power BI (★★★★☆)
