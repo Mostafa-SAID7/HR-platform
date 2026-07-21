@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "B3Jfh6f16tQ=",
+  "dgSpecHash": "scGYx45IOwk=",
   "success": false,
-  "projectFilePath": "C:\\Users\\cw_14\\Downloads\\New folder (3)\\backend\\src\\HR.Performance\\HR.Performance.csproj",
+  "projectFilePath": "C:\\Users\\cw_14\\Downloads\\New folder (3)\\HR-platform\\backend\\src\\HR.Performance\\HR.Performance.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\cw_14\\.nuget\\packages\\aspnetcore.healthchecks.npgsql\\9.0.0\\aspnetcore.healthchecks.npgsql.9.0.0.nupkg.sha512",
     "C:\\Users\\cw_14\\.nuget\\packages\\aspnetcore.healthchecks.redis\\9.0.0\\aspnetcore.healthchecks.redis.9.0.0.nupkg.sha512",
@@ -92,9 +92,9 @@
       "code": "NU1603",
       "level": "Warning",
       "message": "HR.Common depends on Mapster (>= 8.1.5) but Mapster 8.1.5 was not found. Mapster 10.0.0 was resolved instead.",
-      "projectPath": "C:\\Users\\cw_14\\Downloads\\New folder (3)\\backend\\src\\HR.Performance\\HR.Performance.csproj",
+      "projectPath": "C:\\Users\\cw_14\\Downloads\\New folder (3)\\HR-platform\\backend\\src\\HR.Performance\\HR.Performance.csproj",
       "warningLevel": 1,
-      "filePath": "C:\\Users\\cw_14\\Downloads\\New folder (3)\\backend\\src\\HR.Performance\\HR.Performance.csproj",
+      "filePath": "C:\\Users\\cw_14\\Downloads\\New folder (3)\\HR-platform\\backend\\src\\HR.Performance\\HR.Performance.csproj",
       "libraryId": "Mapster",
       "targetGraphs": [
         "net9.0"
@@ -104,9 +104,9 @@
       "code": "NU1603",
       "level": "Warning",
       "message": "HR.Common depends on Mapster.DependencyInjection (>= 8.1.5) but Mapster.DependencyInjection 8.1.5 was not found. Mapster.DependencyInjection 10.0.0 was resolved instead.",
-      "projectPath": "C:\\Users\\cw_14\\Downloads\\New folder (3)\\backend\\src\\HR.Performance\\HR.Performance.csproj",
+      "projectPath": "C:\\Users\\cw_14\\Downloads\\New folder (3)\\HR-platform\\backend\\src\\HR.Performance\\HR.Performance.csproj",
       "warningLevel": 1,
-      "filePath": "C:\\Users\\cw_14\\Downloads\\New folder (3)\\backend\\src\\HR.Performance\\HR.Performance.csproj",
+      "filePath": "C:\\Users\\cw_14\\Downloads\\New folder (3)\\HR-platform\\backend\\src\\HR.Performance\\HR.Performance.csproj",
       "libraryId": "Mapster.DependencyInjection",
       "targetGraphs": [
         "net9.0"
@@ -116,8 +116,8 @@
       "code": "NU1101",
       "level": "Error",
       "message": "Unable to find package Microsoft.EntityFrameworkCore.PostgreSQL. No packages exist with this id in source(s): Microsoft Visual Studio Offline Packages, nuget.org",
-      "projectPath": "C:\\Users\\cw_14\\Downloads\\New folder (3)\\backend\\src\\HR.Performance\\HR.Performance.csproj",
-      "filePath": "C:\\Users\\cw_14\\Downloads\\New folder (3)\\backend\\src\\HR.Performance\\HR.Performance.csproj",
+      "projectPath": "C:\\Users\\cw_14\\Downloads\\New folder (3)\\HR-platform\\backend\\src\\HR.Performance\\HR.Performance.csproj",
+      "filePath": "C:\\Users\\cw_14\\Downloads\\New folder (3)\\HR-platform\\backend\\src\\HR.Performance\\HR.Performance.csproj",
       "libraryId": "Microsoft.EntityFrameworkCore.PostgreSQL",
       "targetGraphs": [
         "net9.0"

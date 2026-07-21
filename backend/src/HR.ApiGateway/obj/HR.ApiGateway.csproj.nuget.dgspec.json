@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\cw_14\\Downloads\\New folder (3)\\backend\\src\\HR.ApiGateway\\HR.ApiGateway.csproj": {}
+    "C:\\Users\\cw_14\\Downloads\\New folder (3)\\HR-platform\\backend\\src\\HR.ApiGateway\\HR.ApiGateway.csproj": {}
   },
   "projects": {
-    "C:\\Users\\cw_14\\Downloads\\New folder (3)\\backend\\src\\HR.ApiGateway\\HR.ApiGateway.csproj": {
+    "C:\\Users\\cw_14\\Downloads\\New folder (3)\\HR-platform\\backend\\src\\HR.ApiGateway\\HR.ApiGateway.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\cw_14\\Downloads\\New folder (3)\\backend\\src\\HR.ApiGateway\\HR.ApiGateway.csproj",
+        "projectUniqueName": "C:\\Users\\cw_14\\Downloads\\New folder (3)\\HR-platform\\backend\\src\\HR.ApiGateway\\HR.ApiGateway.csproj",
         "projectName": "HR.ApiGateway",
-        "projectPath": "C:\\Users\\cw_14\\Downloads\\New folder (3)\\backend\\src\\HR.ApiGateway\\HR.ApiGateway.csproj",
+        "projectPath": "C:\\Users\\cw_14\\Downloads\\New folder (3)\\HR-platform\\backend\\src\\HR.ApiGateway\\HR.ApiGateway.csproj",
         "packagesPath": "C:\\Users\\cw_14\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\cw_14\\Downloads\\New folder (3)\\backend\\src\\HR.ApiGateway\\obj\\",
+        "outputPath": "C:\\Users\\cw_14\\Downloads\\New folder (3)\\HR-platform\\backend\\src\\HR.ApiGateway\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -33,8 +33,8 @@
             "framework": "net9.0",
             "targetAlias": "net9.0",
             "projectReferences": {
-              "C:\\Users\\cw_14\\Downloads\\New folder (3)\\backend\\src\\HR.Common\\HR.Common.csproj": {
-                "projectPath": "C:\\Users\\cw_14\\Downloads\\New folder (3)\\backend\\src\\HR.Common\\HR.Common.csproj"
+              "C:\\Users\\cw_14\\Downloads\\New folder (3)\\HR-platform\\backend\\src\\HR.Common\\HR.Common.csproj": {
+                "projectPath": "C:\\Users\\cw_14\\Downloads\\New folder (3)\\HR-platform\\backend\\src\\HR.Common\\HR.Common.csproj"
               }
             }
           }
@@ -116,14 +116,14 @@
         }
       }
     },
-    "C:\\Users\\cw_14\\Downloads\\New folder (3)\\backend\\src\\HR.Common\\HR.Common.csproj": {
+    "C:\\Users\\cw_14\\Downloads\\New folder (3)\\HR-platform\\backend\\src\\HR.Common\\HR.Common.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\cw_14\\Downloads\\New folder (3)\\backend\\src\\HR.Common\\HR.Common.csproj",
+        "projectUniqueName": "C:\\Users\\cw_14\\Downloads\\New folder (3)\\HR-platform\\backend\\src\\HR.Common\\HR.Common.csproj",
         "projectName": "HR.Common",
-        "projectPath": "C:\\Users\\cw_14\\Downloads\\New folder (3)\\backend\\src\\HR.Common\\HR.Common.csproj",
+        "projectPath": "C:\\Users\\cw_14\\Downloads\\New folder (3)\\HR-platform\\backend\\src\\HR.Common\\HR.Common.csproj",
         "packagesPath": "C:\\Users\\cw_14\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\cw_14\\Downloads\\New folder (3)\\backend\\src\\HR.Common\\obj\\",
+        "outputPath": "C:\\Users\\cw_14\\Downloads\\New folder (3)\\HR-platform\\backend\\src\\HR.Common\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

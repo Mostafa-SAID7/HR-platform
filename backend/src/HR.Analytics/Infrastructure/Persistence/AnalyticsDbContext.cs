@@ -2,9 +2,12 @@ namespace HR.Analytics.Infrastructure.Persistence;
 
 using Microsoft.EntityFrameworkCore;
 using HR.Analytics.Domain;
+using HR.Analytics.Infrastructure.Persistence.Configurations;
+using HR.Analytics.Infrastructure.Persistence.Seeds;
 
 /// <summary>
 /// Entity Framework Core database context for Analytics Service.
+/// Clean design: Configurations and Seeds extracted into separate files.
 /// </summary>
 public class AnalyticsDbContext : DbContext
 {
@@ -21,73 +24,15 @@ public class AnalyticsDbContext : DbContext
     {
         base.OnModelCreating(modelBuilder);
 
-        // Configure AnalyticsEvent
-        modelBuilder.Entity<AnalyticsEvent>(entity =>
-        {
-            entity.ToTable("AnalyticsEvents");
-            entity.HasKey(e => e.Id);
-            entity.HasIndex(e => new { e.EntityType, e.EntityId });
-            entity.HasIndex(e => e.EventTimestamp);
-            entity.Property(e => e.EventType).HasMaxLength(100);
-            entity.Property(e => e.EntityType).HasMaxLength(100);
-        });
+        // Apply entity configurations
+        modelBuilder.ApplyConfiguration(new AnalyticsEventConfiguration());
+        modelBuilder.ApplyConfiguration(new EmployeeAnalyticsConfiguration());
+        modelBuilder.ApplyConfiguration(new PayrollAnalyticsConfiguration());
+        modelBuilder.ApplyConfiguration(new PerformanceAnalyticsConfiguration());
+        modelBuilder.ApplyConfiguration(new AttendanceAnalyticsConfiguration());
+        modelBuilder.ApplyConfiguration(new DashboardMetricsConfiguration());
 
-        // Configure EmployeeAnalytics
-        modelBuilder.Entity<EmployeeAnalytics>(entity =>
-        {
-            entity.ToTable("EmployeeAnalytics");
-            entity.HasKey(e => e.Id);
-            entity.HasIndex(e => e.EmployeeId);
-            entity.Property(e => e.EmployeeName).HasMaxLength(256);
-            entity.Property(e => e.Department).HasMaxLength(100);
-            entity.Property(e => e.Designation).HasMaxLength(100);
-            entity.Property(e => e.Status).HasMaxLength(50);
-        });
-
-        // Configure PayrollAnalytics
-        modelBuilder.Entity<PayrollAnalytics>(entity =>
-        {
-            entity.ToTable("PayrollAnalytics");
-            entity.HasKey(e => e.Id);
-            entity.HasIndex(e => new { e.EmployeeId, e.Year, e.Month });
-            entity.Property(e => e.EmployeeName).HasMaxLength(256);
-            entity.Property(e => e.Status).HasMaxLength(50);
-            entity.Property(e => e.BasicSalary).HasPrecision(18, 2);
-            entity.Property(e => e.GrossIncome).HasPrecision(18, 2);
-            entity.Property(e => e.NetSalary).HasPrecision(18, 2);
-        });
-
-        // Configure PerformanceAnalytics
-        modelBuilder.Entity<PerformanceAnalytics>(entity =>
-        {
-            entity.ToTable("PerformanceAnalytics");
-            entity.HasKey(e => e.Id);
-            entity.HasIndex(e => new { e.EmployeeId, e.Year, e.Quarter });
-            entity.Property(e => e.EmployeeName).HasMaxLength(256);
-            entity.Property(e => e.AverageRating).HasPrecision(3, 2);
-            entity.Property(e => e.Status).HasMaxLength(50);
-        });
-
-        // Configure AttendanceAnalytics
-        modelBuilder.Entity<AttendanceAnalytics>(entity =>
-        {
-            entity.ToTable("AttendanceAnalytics");
-            entity.HasKey(e => e.Id);
-            entity.HasIndex(e => new { e.EmployeeId, e.Year, e.Month });
-            entity.Property(e => e.EmployeeName).HasMaxLength(256);
-            entity.Property(e => e.AverageWorkHours).HasPrecision(5, 2);
-        });
-
-        // Configure DashboardMetrics
-        modelBuilder.Entity<DashboardMetrics>(entity =>
-        {
-            entity.ToTable("DashboardMetrics");
-            entity.HasKey(e => e.Id);
-            entity.HasIndex(e => e.ComputedDate);
-            entity.Property(e => e.AverageBasicSalary).HasPrecision(18, 2);
-            entity.Property(e => e.AverageNetSalary).HasPrecision(18, 2);
-            entity.Property(e => e.AveragePerformanceRating).HasPrecision(3, 2);
-            entity.Property(e => e.AverageAttendancePercentage).HasPrecision(5, 2);
-        });
+        // Seed data
+        DashboardMetricsSeed.Seed(modelBuilder);
     }
 }

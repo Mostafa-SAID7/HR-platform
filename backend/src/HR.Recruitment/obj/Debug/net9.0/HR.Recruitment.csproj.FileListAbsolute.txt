@@ -1,0 +1,9 @@
+C:\Users\cw_14\Downloads\New folder (3)\HR-platform\backend\src\HR.Recruitment\obj\Debug\net9.0\HR.Recruitment.csproj.AssemblyReference.cache
+C:\Users\cw_14\Downloads\New folder (3)\HR-platform\backend\src\HR.Recruitment\obj\Debug\net9.0\rpswa.dswa.cache.json
+C:\Users\cw_14\Downloads\New folder (3)\HR-platform\backend\src\HR.Recruitment\obj\Debug\net9.0\HR.Recruitment.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\cw_14\Downloads\New folder (3)\HR-platform\backend\src\HR.Recruitment\obj\Debug\net9.0\HR.Recruitment.AssemblyInfoInputs.cache
+C:\Users\cw_14\Downloads\New folder (3)\HR-platform\backend\src\HR.Recruitment\obj\Debug\net9.0\HR.Recruitment.AssemblyInfo.cs
+C:\Users\cw_14\Downloads\New folder (3)\HR-platform\backend\src\HR.Recruitment\obj\Debug\net9.0\HR.Recruitment.csproj.CoreCompileInputs.cache
+C:\Users\cw_14\Downloads\New folder (3)\HR-platform\backend\src\HR.Recruitment\obj\Debug\net9.0\HR.Recruitment.MvcApplicationPartsAssemblyInfo.cs
+C:\Users\cw_14\Downloads\New folder (3)\HR-platform\backend\src\HR.Recruitment\obj\Debug\net9.0\HR.Recruitment.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\cw_14\Downloads\New folder (3)\HR-platform\backend\src\HR.Recruitment\obj\Debug\net9.0\HR.Recruitment.sourcelink.json
