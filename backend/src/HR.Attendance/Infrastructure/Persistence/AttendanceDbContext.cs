@@ -26,16 +26,6 @@ public class AttendanceDbContext : DbContext
         modelBuilder.ApplyConfiguration(new AttendanceRecordConfiguration());
         modelBuilder.ApplyConfiguration(new LeaveRequestConfiguration());
         modelBuilder.ApplyConfiguration(new EmployeeShiftConfiguration());
-
-        // Configure Outbox
-        modelBuilder.Entity<OutboxMessage>(entity =>
-        {
-            entity.ToTable("OutboxMessages");
-            entity.HasKey(e => e.Id);
-            entity.Property(e => e.EventType).IsRequired();
-            entity.Property(e => e.Content).IsRequired();
-            entity.HasIndex(e => e.ProcessedOnUtc);
-            entity.HasQueryFilter(e => !e.IsDeleted);
-        });
+        modelBuilder.ApplyConfiguration(new OutboxMessageConfiguration());
     }
 }

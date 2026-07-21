@@ -4,9 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using HR.Attendance.Domain;
 
-/// <summary>
-/// Entity Framework Core configuration for EmployeeShift aggregate.
-/// </summary>
 public class EmployeeShiftConfiguration : IEntityTypeConfiguration<EmployeeShift>
 {
     public void Configure(EntityTypeBuilder<EmployeeShift> builder)

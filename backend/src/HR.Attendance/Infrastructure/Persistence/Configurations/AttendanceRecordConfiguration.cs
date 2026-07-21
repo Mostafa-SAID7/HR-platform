@@ -4,9 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using HR.Attendance.Domain;
 
-/// <summary>
-/// Entity Framework Core configuration for AttendanceRecord aggregate.
-/// </summary>
 public class AttendanceRecordConfiguration : IEntityTypeConfiguration<AttendanceRecord>
 {
     public void Configure(EntityTypeBuilder<AttendanceRecord> builder)

@@ -4,9 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using HR.Attendance.Domain;
 
-/// <summary>
-/// Entity Framework Core configuration for LeaveRequest aggregate.
-/// </summary>
 public class LeaveRequestConfiguration : IEntityTypeConfiguration<LeaveRequest>
 {
     public void Configure(EntityTypeBuilder<LeaveRequest> builder)

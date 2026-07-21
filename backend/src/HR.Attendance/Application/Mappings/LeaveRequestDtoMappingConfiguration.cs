@@ -8,21 +8,21 @@ using HR.Attendance.Application.Dtos.LeaveRequest;
 /// </summary>
 public static class LeaveRequestDtoMappingConfiguration
 {
-    public static LeaveRequestDto ToDto(this LeaveRequest leave)
+    public static LeaveRequestDto ToDto(this LeaveRequest leaveRequest)
     {
         return new LeaveRequestDto
         {
-            Id = leave.Id,
-            EmployeeId = leave.EmployeeId,
-            EmployeeName = leave.EmployeeName,
-            LeaveType = leave.LeaveType,
-            StartDate = leave.StartDate,
-            EndDate = leave.EndDate,
-            LeaveDays = leave.LeaveDays,
-            Reason = leave.Reason,
-            Status = leave.Status,
-            ApprovedBy = leave.ApprovedBy,
-            ApprovedDate = leave.ApprovedDate
+            Id = leaveRequest.Id,
+            EmployeeId = leaveRequest.EmployeeId,
+            EmployeeName = leaveRequest.EmployeeName,
+            LeaveType = leaveRequest.LeaveType,
+            StartDate = leaveRequest.StartDate,
+            EndDate = leaveRequest.EndDate,
+            LeaveDays = leaveRequest.LeaveDays,
+            Reason = leaveRequest.Reason,
+            Status = leaveRequest.Status,
+            ApprovedBy = leaveRequest.ApprovedBy,
+            ApprovedDate = leaveRequest.ApprovedDate
         };
     }
 }
