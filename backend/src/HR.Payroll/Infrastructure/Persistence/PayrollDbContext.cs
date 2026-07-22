@@ -3,6 +3,7 @@ namespace HR.Payroll.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using HR.Payroll.Domain;
 using HR.Payroll.Infrastructure.Persistence.Configurations;
+using HR.Payroll.Infrastructure.Persistence.Seeds;
 using HR.Common.Outbox;
 
 /// <summary>
@@ -23,11 +24,17 @@ public class PayrollDbContext : DbContext
     {
         base.OnModelCreating(modelBuilder);
 
+        // Apply entity configurations
         modelBuilder.ApplyConfiguration(new PayrollRecordConfiguration());
         modelBuilder.ApplyConfiguration(new SalaryComponentConfiguration());
         modelBuilder.ApplyConfiguration(new DeductionConfiguration());
         modelBuilder.ApplyConfiguration(new TaxSlabConfiguration());
         modelBuilder.ApplyConfiguration(new PayslipConfiguration());
         modelBuilder.ApplyConfiguration(new OutboxMessageConfiguration());
+
+        // Seed initial data
+        SalaryComponentSeed.Seed(modelBuilder);
+        TaxSlabSeed.Seed(modelBuilder);
+        PayslipSeed.Seed(modelBuilder);
     }
 }
