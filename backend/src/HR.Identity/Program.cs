@@ -22,6 +22,9 @@ builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection(JwtOptio
 builder.Services.AddScoped<ITokenService, JwtTokenService>();
 builder.Services.AddScoped<IPasswordHasher, BcryptPasswordHasher>();
 
+// Add OTP and OAuth services
+builder.Services.AddOtpOAuthServices(builder.Configuration);
+
 // Add authentication & authorization
 builder.Services.AddIdentityAuthentication();
 builder.Services.AddIdentityAuthorization();

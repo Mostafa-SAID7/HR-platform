@@ -1,9 +1,9 @@
-namespace HR.Identity.Application.Dtos.RefreshToken;
+namespace HR.Identity.Application.Options;
 
 /// <summary>
-/// JWT token payload DTO.
+/// JWT token payload model for claim generation
 /// </summary>
-public record JwtTokenPayload
+public class JwtTokenPayload
 {
     public Guid UserId { get; set; }
     public Guid TenantId { get; set; }

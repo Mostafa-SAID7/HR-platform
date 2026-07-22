@@ -22,6 +22,8 @@ public class IdentityDbContext : DbContext
     public DbSet<RefreshToken> RefreshTokens { get; set; } = null!;
     public DbSet<RolePermission> RolePermissions { get; set; } = null!;
     public DbSet<RoleClaim> RoleClaims { get; set; } = null!;
+    public DbSet<OtpRequest> OtpRequests { get; set; } = null!;
+    public DbSet<OAuthProvider> OAuthProviders { get; set; } = null!;
     public DbSet<OutboxMessage> OutboxMessages { get; set; } = null!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -37,11 +39,15 @@ public class IdentityDbContext : DbContext
         modelBuilder.ApplyConfiguration(new RefreshTokenConfiguration());
         modelBuilder.ApplyConfiguration(new RolePermissionConfiguration());
         modelBuilder.ApplyConfiguration(new RoleClaimConfiguration());
+        modelBuilder.ApplyConfiguration(new OtpRequestConfiguration());
+        modelBuilder.ApplyConfiguration(new OAuthProviderConfiguration());
         modelBuilder.ApplyConfiguration(new OutboxMessageConfiguration());
 
         // Seed initial data
         UserSeed.Seed(modelBuilder);
         RoleSeed.Seed(modelBuilder);
         PermissionSeed.Seed(modelBuilder);
+        OtpRequestSeed.Seed(modelBuilder);
+        OAuthProviderSeed.Seed(modelBuilder);
     }
 }

@@ -86,13 +86,10 @@ public class OAuthProvider : BaseEntity
 }
 
 /// <summary>
-/// OAuth provider type enumeration
+/// OAuth provider type enumeration - Only Google and Facebook supported
 /// </summary>
 public enum OAuthProviderType
 {
     Google = 0,
-    Facebook = 1,
-    GitHub = 2,
-    Microsoft = 3,
-    LinkedIn = 4
+    Facebook = 1
 }

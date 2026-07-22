@@ -1,7 +1,9 @@
 namespace HR.Identity.Features.RequestOtp;
 
 using MediatR;
-using HR.Identity.Application.Dtos;
+using HR.Identity.Application.Dtos.Otp;
+using HR.Identity.Application.Interfaces;
+using HR.Identity.Application.Options;
 using HR.Identity.Domain;
 using HR.Common;
 
@@ -11,11 +13,19 @@ using HR.Common;
 public class RequestOtpHandler : IRequestHandler<RequestOtpCommand, OtpResponseDto>
 {
     private readonly IUnitOfWork _unitOfWork;
+    private readonly IOtpSender _otpSender;
+    private readonly OtpOptions _otpOptions;
     private readonly ILogger<RequestOtpHandler> _logger;
 
-    public RequestOtpHandler(IUnitOfWork unitOfWork, ILogger<RequestOtpHandler> logger)
+    public RequestOtpHandler(
+        IUnitOfWork unitOfWork,
+        IOtpSender otpSender,
+        IOptions<OtpOptions> otpOptions,
+        ILogger<RequestOtpHandler> logger)
     {
         _unitOfWork = unitOfWork;
+        _otpSender = otpSender;
+        _otpOptions = otpOptions.Value;
         _logger = logger;
     }
 
@@ -25,9 +35,13 @@ public class RequestOtpHandler : IRequestHandler<RequestOtpCommand, OtpResponseD
         {
             _logger.LogInformation("Processing OTP request for email: {Email}", request.Email);
 
+            if (!_otpOptions.Enabled)
+            {
+                throw new InvalidOperationException("OTP service is not enabled");
+            }
+
             // Find user by email or create if doesn't exist
-            // Note: This is a simplified example - implement proper user lookup
-            var userId = Guid.NewGuid(); // Placeholder
+            var userId = Guid.NewGuid(); // Placeholder - should lookup actual user
             var otpType = (OtpType)request.OtpType;
 
             var otpRequest = OtpRequest.Create(
@@ -37,8 +51,25 @@ public class RequestOtpHandler : IRequestHandler<RequestOtpCommand, OtpResponseD
                 otpType,
                 Guid.NewGuid()); // Use actual tenant ID
 
-            // TODO: Send OTP via email/SMS
-            _logger.LogInformation("OTP generated: {OtpCode} for email: {Email}", otpRequest.OtpCode, request.Email);
+            // Send OTP via email (SendGrid only)
+            _logger.LogInformation("Sending OTP email to: {Email}", request.Email);
+            var sendSuccess = await _otpSender.SendOtpEmailAsync(
+                request.Email,
+                otpRequest.OtpCode,
+                _otpOptions.ExpiryMinutes,
+                cancellationToken);
+
+            if (!sendSuccess)
+            {
+                _logger.LogError("Failed to send OTP for email: {Email}", request.Email);
+                throw new InvalidOperationException("Failed to send OTP. Please try again.");
+            }
+
+            // Save OTP request to database
+            _unitOfWork.GetRepository<OtpRequest>().Add(otpRequest);
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+            _logger.LogInformation("OTP sent successfully to {Email}", request.Email);
 
             return new OtpResponseDto(
                 otpRequest.Id,

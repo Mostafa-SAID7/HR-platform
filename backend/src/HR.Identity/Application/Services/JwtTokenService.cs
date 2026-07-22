@@ -7,6 +7,8 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using HR.Identity.Domain;
+using HR.Identity.Application.Interfaces;
+using HR.Identity.Application.Options;
 
 /// <summary>
 /// Implementation of token service using JWT.

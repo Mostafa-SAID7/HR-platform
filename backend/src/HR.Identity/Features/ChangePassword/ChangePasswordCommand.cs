@@ -1,6 +1,6 @@
 namespace HR.Identity.Features.ChangePassword;
 
-using HR.Identity.Application.Dtos.UserProfile;
+using HR.Identity.Application.Dtos.ChangePassword;
 
 /// <summary>
 /// Command to change user password
